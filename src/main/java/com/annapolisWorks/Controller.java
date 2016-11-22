@@ -12,4 +12,9 @@ public class Controller {
     public void doMyAction(ActionEvent event){
         System.out.println("I've been clicked!");
     }
+
+    public void subtractAction(int i){
+        //update number of remaining actions
+        //gray out action buttons if no actions remaining
+    }
 }
