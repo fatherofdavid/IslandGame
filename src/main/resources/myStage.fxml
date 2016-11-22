@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="501.0" prefWidth="757.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.annapolisWorks.Controller">
+<AnchorPane prefHeight="501.0" prefWidth="757.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.annapolisWorks.GUI_Controller">
    <children>
       <MenuBar layoutX="14.0" layoutY="14.0" minHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -111,7 +111,7 @@
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Label prefHeight="17.0" prefWidth="80.0" text="Actions Left: " />
-                              <Label fx:id="remainingActionsLabel" />
+                              <Label fx:id="remainingActionsLabel" text="2" />
                            </children>
                         </HBox>
                         <Button fx:id="moveButton" maxHeight="20.0" mnemonicParsing="false" onAction="#move" prefHeight="18.0" prefWidth="120.0" text="Move" />

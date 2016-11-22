@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class Controller {
+public class GUI_Controller {
 
     @FXML
     Label remainingActionsLabel;
@@ -46,6 +46,7 @@ public class Controller {
 
     //user button commands
     public void move(ActionEvent event){
+        Main.test(this);
     }
     public void shoreUp(ActionEvent event){
     }
