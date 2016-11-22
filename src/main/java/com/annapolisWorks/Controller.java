@@ -3,13 +3,46 @@ package com.annapolisWorks;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 
 public class Controller {
 
-    public
+    @FXML
+    Label remainingActionsLabel;
 
     @FXML
-    Button moveButton;
+    private Button moveButton;
+
+    @FXML
+    private Button shoreUpButton;
+
+    @FXML
+    private Button giveTreasureCardButton;
+
+    @FXML
+    private Button captureTreasureButton;
+
+    @FXML
+    private Button flyButton;
+
+    @FXML
+    private Button swimButton;
+
+    @FXML
+    private Button guideButton;
+
+    @FXML
+    private Button useCardButton;
+
+    public void actionUsed(float used) {
+        float remainingActions = Float.parseFloat(remainingActionsLabel.getText());
+        remainingActions = remainingActions - used;
+        remainingActionsLabel.setText(""+remainingActions);
+    }
+
+    public void flyUsed() {
+        flyButton.setDisable(true);
+    }
 
     //user button commands
     public void move(ActionEvent event){
@@ -21,6 +54,7 @@ public class Controller {
     public void captureTreasure(ActionEvent event){
     }
     public void fly(ActionEvent event){
+        flyUsed();
     }
     public void swim(ActionEvent event){
     }

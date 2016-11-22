@@ -108,15 +108,20 @@
                <children>
                   <VBox prefHeight="241.0" prefWidth="132.0">
                      <children>
-                        <Label prefHeight="17.0" prefWidth="120.0" text="Actions Left: X" />
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="17.0" prefWidth="80.0" text="Actions Left: " />
+                              <Label fx:id="remainingActionsLabel" />
+                           </children>
+                        </HBox>
                         <Button fx:id="moveButton" maxHeight="20.0" mnemonicParsing="false" onAction="#move" prefHeight="18.0" prefWidth="120.0" text="Move" />
-                        <Button mnemonicParsing="false" onAction="#shoreUp" prefWidth="120.0" text="Shore Up" />
-                        <Button mnemonicParsing="false" onAction="#giveCard" prefWidth="120.0" text="Give Treasure Card" />
-                        <Button mnemonicParsing="false" onAction="#captureTreasure" prefWidth="120.0" text="Capture Treasure" />
-                        <Button mnemonicParsing="false" onAction="#fly" prefWidth="120.0" text="Fly" />
-                        <Button mnemonicParsing="false" onAction="#swim" prefWidth="120.0" text="Swim" />
-                        <Button mnemonicParsing="false" onAction="#guide" prefHeight="21.0" prefWidth="120.0" text="Guide" />
-                        <Button mnemonicParsing="false" onAction="#useCard" prefWidth="120.0" text="Use Card" />
+                        <Button fx:id="shoreUpButton" mnemonicParsing="false" onAction="#shoreUp" prefWidth="120.0" text="Shore Up" />
+                        <Button fx:id="giveTreasureCardButton" mnemonicParsing="false" onAction="#giveCard" prefWidth="120.0" text="Give Treasure Card" />
+                        <Button fx:id="captureTreasureButton" mnemonicParsing="false" onAction="#captureTreasure" prefWidth="120.0" text="Capture Treasure" />
+                        <Button fx:id="flyButton" mnemonicParsing="false" onAction="#fly" prefWidth="120.0" text="Fly" />
+                        <Button fx:id="swimButton" mnemonicParsing="false" onAction="#swim" prefWidth="120.0" text="Swim" />
+                        <Button fx:id="guideButton" mnemonicParsing="false" onAction="#guide" prefHeight="21.0" prefWidth="120.0" text="Guide" />
+                        <Button fx:id="useCardButton" mnemonicParsing="false" onAction="#useCard" prefWidth="120.0" text="Use Card" />
                         <Button mnemonicParsing="false" onAction="#endTurn" prefWidth="120.0" text="End Turn" />
                         <Label prefHeight="17.0" prefWidth="120.0" text="helpful notes" />
                      </children>
