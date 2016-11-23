@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class Adventurer {
     public int remainingActions;
-    public String myName;
+    protected String myName;
     protected Tile myTile;
     protected ArrayList<ActionCard> myActionCards;
     protected ArrayList<TreasureCard> myTreasureCards;
@@ -16,6 +16,10 @@ public abstract class Adventurer {
     //this should not be used
     protected Adventurer() {}
 
+    public String getName() {
+        return myName;
+    }
+
     boolean isAccessible(Tile newTile){
         if((newTile.getX() - myTile.getX() == 0) && (Math.abs(newTile.getY() - myTile.getY())) == 1)
             return true;
@@ -25,31 +29,31 @@ public abstract class Adventurer {
             return false;
     }
 
-    void move(Tile newTile) {
+    public void move(Tile newTile) {
         if(isAccessible(newTile)) {
             myTile = newTile;
             actionUsed();
         }
     }
 
-    void shoreUp(Tile adjTile) {
+    public void shoreUp(Tile adjTile) {
         if(isAccessible(adjTile)) {
             myTile = adjTile;
             actionUsed();
         }
     }
 
-    void giveCard(Adventurer teammate, ActionCard card) {
+    public void giveCard(Adventurer teammate, ActionCard card) {
         if(teammate.myTile == myTile) {
         }
     }
 
-    void actionUsed() {
+    public void actionUsed() {
         //this does not need to necessarily be overwritten, but need to have better UI interface platform
         throw new RuntimeException("action used was not overwritten");
     }
 
-    void addCard(Card card) {
+    public void addCard(Card card) {
         if(card instanceof ActionCard) myActionCards.add((ActionCard)card);
         else if(card instanceof TreasureCard) myTreasureCards.add((TreasureCard)card);
         else throw new RuntimeException("Problem with cards and type-casting");
@@ -57,6 +61,12 @@ public abstract class Adventurer {
 }
 
 class Explorer extends Adventurer {
+
+    public Explorer(Tile myStartingTile) {
+        super(myStartingTile);
+        myName = "Explorer";
+    }
+
     @Override
     boolean isAccessible(Tile newTile) {
         if(newTile.getSubmersion() > 1)
@@ -73,9 +83,12 @@ class Explorer extends Adventurer {
 
 class Pilot extends Adventurer {
 
-    Pilot(Tile startingTile) {super(startingTile);}
+    public Pilot(Tile myStartingTile) {
+        super(myStartingTile);
+        myName = "Pilot";
+    }
 
-    void fly(Tile newTile) {
+    public void fly(Tile newTile) {
         if(newTile.getSubmersion() > 1) myTile = newTile;
     }
 }

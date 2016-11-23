@@ -7,7 +7,7 @@ public class Game {
     int waterLevel;
     Tile[][] gameBoard = new Tile[4][4];
 
-    void newGame(){
+    void newGame(GUI_Controller GUI){
 
         //build the game board
         for(int x = 0; x < 4; x++) {
@@ -18,6 +18,9 @@ public class Game {
 
         Pilot player1 = new Pilot(gameBoard[0][0]);
         player1.fly(gameBoard[3][3]);
+        GUI.nextTurn(player1, 4);
+
+
 
     }
 
