@@ -4,10 +4,7 @@ import java.util.ArrayList;
 
 public class Game {
     ArrayList<Adventurer> roster;
-<<<<<<< HEAD
-=======
     private ArrayList<Treasure> capturedTreasures;
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
     int waterLevel;
     Tile[][] gameBoard = new Tile[4][4];
 
@@ -19,18 +16,6 @@ public class Game {
                 gameBoard[x][y] = new Tile(x, y);
             }
         }
-<<<<<<< HEAD
-
-        Pilot player1 = new Pilot(gameBoard[0][0]);
-        player1.fly(gameBoard[3][3]);
-        GUI.nextTurn(player1, 4);
-
-
-
-    }
-
-
-=======
         //can randomize this for more complex gameplay
         //remember these will return false if an overwrite is attempted
         //also, need to write this to the GUI somehow
@@ -72,17 +57,13 @@ public class Game {
         }
         return false;
     }
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
 }
 
 class Tile {
     private int xCoord;
     private int yCoord;
     private int submersion;
-<<<<<<< HEAD
-=======
     private Treasure treasureAccess;
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
 
     Tile(int x, int y) {
         xCoord = x;
@@ -90,15 +71,6 @@ class Tile {
         submersion = 0;
     }
 
-<<<<<<< HEAD
-    int getX() {return xCoord;}
-    int getY() {return yCoord;}
-    int getSubmersion() {return submersion;}
-
-    //once it is submersed 2 or more, it has sunk and cannot be shored up
-    void shoreUp() {
-        if (submersion == 1) submersion--;
-=======
     public int getX() {return xCoord;}
     public int getY() {return yCoord;}
     public int getSubmersion() {return submersion;}
@@ -120,6 +92,5 @@ class Tile {
             return true;
         }
         else return false;
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
     }
 }

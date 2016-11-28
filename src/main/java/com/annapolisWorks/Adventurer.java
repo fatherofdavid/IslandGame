@@ -3,11 +3,7 @@ package com.annapolisWorks;
 import java.util.ArrayList;
 
 public abstract class Adventurer {
-<<<<<<< HEAD
-    public int remainingActions;
-=======
     public float remainingActions;
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
     protected String myName;
     protected Tile myTile;
     protected ArrayList<ActionCard> myActionCards;
@@ -17,11 +13,7 @@ public abstract class Adventurer {
         myTile = startingTile;
     }
 
-<<<<<<< HEAD
-    //this should not be used
-=======
     //this should not be used - IDE is forcing its creation
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
     protected Adventurer() {}
 
     public String getName() {
@@ -37,30 +29,6 @@ public abstract class Adventurer {
             return false;
     }
 
-<<<<<<< HEAD
-    public void move(Tile newTile) {
-        if(isAccessible(newTile)) {
-            myTile = newTile;
-            actionUsed();
-        }
-    }
-
-    public void shoreUp(Tile adjTile) {
-        if(isAccessible(adjTile)) {
-            myTile = adjTile;
-            actionUsed();
-        }
-    }
-
-    public void giveCard(Adventurer teammate, ActionCard card) {
-        if(teammate.myTile == myTile) {
-        }
-    }
-
-    public void actionUsed() {
-        //this does not need to necessarily be overwritten, but need to have better UI interface platform
-        throw new RuntimeException("action used was not overwritten");
-=======
     public boolean move(Tile newTile) {
         if(isAccessible(newTile) && remainingActions >= 1) {
             myTile = newTile;
@@ -102,7 +70,6 @@ public abstract class Adventurer {
 
     public void actionUsed(float usedActionCount) {
         remainingActions = remainingActions - usedActionCount;
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
     }
 
     public void addCard(Card card) {
@@ -110,12 +77,6 @@ public abstract class Adventurer {
         else if(card instanceof TreasureCard) myTreasureCards.add((TreasureCard)card);
         else throw new RuntimeException("Problem with cards and type-casting");
     }
-<<<<<<< HEAD
-}
-
-class Explorer extends Adventurer {
-
-=======
 
     public void removeCard(Card card) {
         if(card instanceof ActionCard) myActionCards.remove((ActionCard)card);
@@ -125,7 +86,6 @@ class Explorer extends Adventurer {
 }
 
 class Explorer extends Adventurer {
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
     public Explorer(Tile myStartingTile) {
         super(myStartingTile);
         myName = "Explorer";
@@ -146,21 +106,13 @@ class Explorer extends Adventurer {
 }
 
 class Pilot extends Adventurer {
-<<<<<<< HEAD
-=======
     boolean flightUsed = false;
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
 
     public Pilot(Tile myStartingTile) {
         super(myStartingTile);
         myName = "Pilot";
     }
 
-<<<<<<< HEAD
-    public void fly(Tile newTile) {
-        if(newTile.getSubmersion() > 1) myTile = newTile;
-    }
-=======
     public boolean fly(Tile newTile) {
         if(newTile.getSubmersion() < 2 && remainingActions >= 1 && !flightUsed) {
             flightUsed = true;
@@ -228,5 +180,4 @@ class Diver extends Adventurer {
         else return false;
     }
 
->>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
 }
