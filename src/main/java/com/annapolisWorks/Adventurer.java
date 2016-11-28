@@ -167,7 +167,6 @@ class Diver extends Adventurer {
 
     //!! this doesn't fully work. It doesn't have any way to tell when you're done, or to stop you
     //from stopping on a sunk tile
-    //need to fix Git
     public boolean swim(Tile newTile) {
         if(remainingActions >= 1) {
             myTile = newTile;

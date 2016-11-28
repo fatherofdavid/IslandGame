@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="360.0" prefWidth="544.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.annapolisWorks.Intro_Controller">
+   <children>
+      <ImageView fitHeight="360.0" fitWidth="544.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@helicopter_flying.jpg" />
+         </image>
+      </ImageView>
+      <Pane layoutX="336.0" layoutY="40.0" prefHeight="289.0" prefWidth="190.0">
+         <children>
+            <ChoiceBox fx:id="player1ChoiceBox" layoutX="11.0" layoutY="28.0" prefWidth="150.0" />
+            <ChoiceBox fx:id="player2ChoiceBox" layoutX="11.0" layoutY="60.0" prefWidth="150.0" />
+            <ChoiceBox fx:id="player3ChoiceBox" layoutX="11.0" layoutY="95.0" prefWidth="150.0" />
+            <ChoiceBox fx:id="player4ChoiceBox" layoutX="11.0" layoutY="130.0" prefWidth="150.0" />
+            <RadioButton fx:id="difficultyNoviceRadio" layoutX="21.0" layoutY="175.0" mnemonicParsing="false" selected="true" text="Novice" textFill="WHITE">
+               <toggleGroup>
+                  <ToggleGroup fx:id="difficulty" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="difficultyExperiencedRadio" layoutX="21.0" layoutY="203.0" mnemonicParsing="false" text="Experienced" textFill="WHITE" toggleGroup="$difficulty" />
+            <RadioButton fx:id="difficultyLegendaryRadio" layoutX="21.0" layoutY="228.0" mnemonicParsing="false" text="Legendary" textFill="WHITE" toggleGroup="$difficulty" />
+            <Button fx:id="startButton" layoutX="21.0" layoutY="263.0" mnemonicParsing="false" onAction="#startUp" prefHeight="25.0" prefWidth="137.0" text="Start" />
+            <Label layoutX="21.0" layoutY="6.0" text="Select Team: " textFill="WHITE" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

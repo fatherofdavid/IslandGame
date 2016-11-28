@@ -1,11 +1,14 @@
 package com.annapolisWorks;
 
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,7 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-public class GUI_Controller {
+public class GUI_Controller implements Initializable {
     //set to 1 for move, 2 for shore, 3 for give card, 5 for fly, 6 for swim, 7 for guide
     int actionSelected = 0;
 
@@ -113,7 +116,8 @@ public class GUI_Controller {
     @FXML
     private Button useCardButton;
 
-    public void startUp() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         currentPlayerLabel = player1Label;
         Game mission = new Game();
         mission.newGame(this);
