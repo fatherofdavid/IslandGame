@@ -19,6 +19,7 @@ public abstract class Adventurer {
     public String getName() {
         return myName;
     }
+    public void setTile(Tile newTile) {myTile = newTile;};
 
     boolean isAccessible(Tile newTile){
         if((newTile.getX() - myTile.getX() == 0) && (Math.abs(newTile.getY() - myTile.getY())) == 1)
@@ -57,7 +58,7 @@ public abstract class Adventurer {
         else return false;
     }
 
-    public boolean captureTreasure(Game game, Treasure treasure) {
+    public boolean captureTreasure(GameEngine game, Treasure treasure) {
         if(myTile.getTreasureAccess() == treasure && remainingActions >= 1) {
             if(!game.alreadyCaptured(treasure)) {
                 game.treasureCaptured(treasure);
@@ -153,6 +154,22 @@ class Messenger extends Adventurer {
         if(remainingActions >= 1) {
             teammate.addCard(card);
             this.removeCard(card);
+            return true;
+        }
+        else return false;
+    }
+}
+
+class Navigator extends Adventurer {
+    public Navigator(Tile myStartingTile) {
+        super(myStartingTile);
+        myName = "Messenger";
+    }
+
+    public boolean guide(Adventurer adv, Tile newTile) {
+        if(adv.isAccessible(newTile)) {
+            adv.setTile(newTile);
+            actionUsed(0.5f);
             return true;
         }
         else return false;

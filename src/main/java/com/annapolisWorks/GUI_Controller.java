@@ -19,12 +19,12 @@ import javafx.scene.layout.VBox;
 
 public class GUI_Controller implements Initializable {
     //set to 1 for move, 2 for shore, 3 for give card, 5 for fly, 6 for swim, 7 for guide
-    int actionSelected = 0;
+    private int actionSelected = 0;
+    private GameEngine model;
 
-    Label currentPlayerLabel;
 
     @FXML
-    private VBox jessesTest;
+    private Label currentPlayerLabel;
 
     @FXML
     private Label player1Label;
@@ -119,8 +119,10 @@ public class GUI_Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         currentPlayerLabel = player1Label;
-        Game mission = new Game();
-        mission.newGame(this);
+    }
+
+    public void setModel(GameEngine newGame) {
+        model = newGame;
     }
 
     public void actionUsed(float used) {

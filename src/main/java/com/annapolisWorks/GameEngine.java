@@ -2,16 +2,22 @@ package com.annapolisWorks;
 
 import java.util.ArrayList;
 
-public class Game {
+public class GameEngine {
     ArrayList<Adventurer> roster;
     private ArrayList<Treasure> capturedTreasures;
     int waterLevel;
     GUI_Controller GUI;
     Tile[][] gameBoard = new Tile[4][4];
 
-    void newGame(GUI_Controller newGUI, int startingWaterLevel){
+    public GameEngine(GUI_Controller newGUI, int startingWaterLevel, ArrayList<String> rosterStrings){
         waterLevel = startingWaterLevel;
         GUI = newGUI;
+
+        roster = new ArrayList<Adventurer>();
+        Tile helipad = new Tile(2,2);
+        for (String advName : rosterStrings) {
+            roster.add(createAdventurer(advName, helipad));
+        }
 
         //build the game board
         for(int x = 0; x < 4; x++) {
@@ -30,10 +36,6 @@ public class Game {
         gameBoard[2][3].setTreasureAccess(Treasure.AIR);
         gameBoard[0][1].setTreasureAccess(Treasure.EARTH);
         gameBoard[0][2].setTreasureAccess(Treasure.EARTH);
-
-        Pilot player1 = new Pilot(gameBoard[0][0]);
-        player1.fly(gameBoard[3][3]);
-        //GUI.nextTurn(player1, 4);
     }
 
     /*
@@ -59,6 +61,18 @@ public class Game {
             if(t.name() == newTreasure.name()) return true;
         }
         return false;
+    }
+
+    public Adventurer createAdventurer(String adventurerName, Tile startingTile) {
+        switch(adventurerName) {
+            case "Explorer" : {return new Explorer(startingTile); }
+            case "Pilot" : return new Pilot(startingTile);
+            case "Engineer" : return new Engineer(startingTile);
+            case "Messenger" : return new Messenger(startingTile);
+            case "Navigator" : return new Navigator(startingTile);
+            case "Diver" : return new Diver(startingTile);
+            default: throw new RuntimeException("attempted to create an unsupported adventurer type");
+        }
     }
 }
 

@@ -2,6 +2,7 @@ package com.annapolisWorks;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -53,6 +54,11 @@ public class Intro_Controller implements Initializable{
     @FXML
     private Button startButton;
 
+    ObservableList<String> adventurers = FXCollections.observableArrayList("not selected", "Explorer", "Pilot",
+            "Engineer", "Messenger", "Navigator", "Diver");
+
+    ArrayList<ChoiceBox> choiceBoxes;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         player1ChoiceBox.setItems(adventurers);
@@ -64,32 +70,56 @@ public class Intro_Controller implements Initializable{
         player4ChoiceBox.setItems(adventurers);
         player4ChoiceBox.setValue(adventurers.get(0));
 
+        choiceBoxes = new ArrayList<ChoiceBox>();
+        choiceBoxes.add(player1ChoiceBox);
+        choiceBoxes.add(player2ChoiceBox);
+        choiceBoxes.add(player3ChoiceBox);
+        choiceBoxes.add(player4ChoiceBox);
+
         //hefty code can be added to force no duplicate choices and at least 2 players
     }
 
-    ObservableList<String> adventurers = FXCollections.observableArrayList("not selected", "Explorer", "Pilot",
-            "Engineer", "Messenger", "Navigator", "Diver");
-
     @FXML
     void startUp(ActionEvent event) {
-        //show transfer control to the main window
-        //validate user entries
 
-        FXMLLoader GUI_InterfaceLoader = new FXMLLoader();
-        GUI_InterfaceLoader.setLocation(getClass().getResource("/myStage.fxml"));
+        //still need validation for user entries
+
+        //pull in player list
+        ArrayList<String> roster = new ArrayList();
+        for (ChoiceBox cb : choiceBoxes) {
+            if(cb.getValue() != adventurers.get(0)) {
+                roster.add((String)cb.getValue());
+            }
+        }
+        //get water level
+        int waterLevel;
+        if(difficultyNoviceRadio.isSelected()) waterLevel = 2;
+        else if(difficultyNoviceRadio.isSelected()) waterLevel = 3;
+        else waterLevel = 4;
+
+
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("/myStage.fxml"));
         Parent root = null;
         try {
-            root = GUI_InterfaceLoader.load(getClass().getResource("/myStage.fxml"));
+            root = fxmlLoader.load(getClass().getResource("/myStage.fxml"));
+            root = (Parent) fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        //start the game, load GUI into model and vice versa
+        GUI_Controller GUI = (GUI_Controller)fxmlLoader.getController();
+        GameEngine newGame = new GameEngine(GUI, waterLevel, roster);
+        ((GUI_Controller)fxmlLoader.getController()).setModel(newGame);
+
+        //show new window, hide current one
         Stage stage = new Stage();
-        stage.setTitle("My New Stage Title");
+        stage.setTitle("Forbidden Island");
         stage.setScene(new Scene(root, 300, 275));
         stage.show();
-        // Hide this current window (if this is what you want)
         rootAnchorPane.getScene().getWindow().hide();
-
     }
 
 }
