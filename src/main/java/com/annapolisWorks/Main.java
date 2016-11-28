@@ -18,6 +18,13 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+<<<<<<< HEAD
         launch(args);
+=======
+        GUI_Controller demoGUI = new GUI_Controller();
+        Game mission = new Game();
+        mission.newGame(demoGUI);
+        //launch(args);
+>>>>>>> df82c19705a31d396212dae2a6c411fe3898aed6
     }
 }
