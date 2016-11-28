@@ -6,9 +6,12 @@ public class Game {
     ArrayList<Adventurer> roster;
     private ArrayList<Treasure> capturedTreasures;
     int waterLevel;
+    GUI_Controller GUI;
     Tile[][] gameBoard = new Tile[4][4];
 
-    void newGame(GUI_Controller GUI){
+    void newGame(GUI_Controller newGUI, int startingWaterLevel){
+        waterLevel = startingWaterLevel;
+        GUI = newGUI;
 
         //build the game board
         for(int x = 0; x < 4; x++) {
