@@ -117,7 +117,7 @@ public class Intro_Controller implements Initializable{
         //show new window, hide current one
         Stage stage = new Stage();
         stage.setTitle("Forbidden Island");
-        stage.setScene(new Scene(root, 300, 275));
+        stage.setScene(new Scene(root, 900, 500));
         stage.show();
         rootAnchorPane.getScene().getWindow().hide();
     }

@@ -22,6 +22,8 @@ public class GUI_Controller implements Initializable {
     private int actionSelected = 0;
     private GameEngine model;
 
+    @FXML
+    private Label waterLevelLabel;
 
     @FXML
     private Label currentPlayerLabel;
@@ -134,6 +136,7 @@ public class GUI_Controller implements Initializable {
     public void flyUsed() { flyButton.setDisable(true); }
     public void resetFly() { flyButton.setDisable(false); }
 
+
     public void nextTurn(Adventurer activePlayer, int remainingActions) {
         remainingActionsLabel.setText(""+remainingActions);
         resetFly();
@@ -183,6 +186,28 @@ public class GUI_Controller implements Initializable {
         return false;
     }
 
+    public void raiseWater() {
+        int currentWaterLevel = Integer.parseInt(waterLevelLabel.getText());
+        currentWaterLevel++;
+        waterLevelLabel.setText("" + currentWaterLevel);
+    }
+
+    public void floodTile(int x, int y) {
+        ImageView tileToFlood = getXYImage(x, y);
+        tileToFlood.setOpacity(0.6);
+    }
+
+    public void sinkTile(int x, int y) {
+        ImageView tileToFlood = getXYImage(x, y);
+        tileToFlood.setOpacity(0d);
+    }
+
+    public void shoreTile(int x, int y) {
+        ImageView tileToFlood = getXYImage(x, y);
+        ImageView myImage = null;
+        myImage.setOpacity(1d);
+    }
+
     public void movePlayerIcon(String characterId, int lastx, int lasty, int newx, int newy) {
         VBox lastVBox = getXY_VBox(lastx, lasty);
         ImageView myImage = null;
@@ -199,12 +224,7 @@ public class GUI_Controller implements Initializable {
     }
 
 
-    /*
-    **
-    Section to access particular tiles in order to move user images or show a tile as flooded
-    **
-     */
-
+    //Section to access particular tiles in order to move user images or show a tile as flooded
     public ImageView getXYImage(int x, int y) {
         AnchorPane anchorPane = getXYPane(x, y);
         ObservableList<Node> anchorContents = anchorPane.getChildren();
@@ -225,7 +245,7 @@ public class GUI_Controller implements Initializable {
         throw new RuntimeException("the program tried to access a nonexistent node");
     }
 
-    //creating an x-y lookup for the game board anchor panes, thereby the image & gride panes
+    //creating an x-y lookup for the game board anchor panes, thereby the image & grid panes
     public AnchorPane getXYPane(int x, int y) {
         switch (x) {
             case 0: {
@@ -308,6 +328,7 @@ public class GUI_Controller implements Initializable {
     public void useCard(ActionEvent event){
     }
     public void endTurn(ActionEvent event){
+        model.endTurn();
     }
 }
 

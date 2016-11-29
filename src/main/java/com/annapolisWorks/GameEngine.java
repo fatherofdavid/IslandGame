@@ -1,9 +1,11 @@
 package com.annapolisWorks;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameEngine {
     ArrayList<Adventurer> roster;
+    Adventurer currentPlayer;
     private ArrayList<Treasure> capturedTreasures;
     int waterLevel;
     GUI_Controller GUI;
@@ -15,9 +17,13 @@ public class GameEngine {
 
         roster = new ArrayList<Adventurer>();
         Tile helipad = new Tile(2,2);
+        helipad.setTreasureAccess(Treasure.HELI);
         for (String advName : rosterStrings) {
             roster.add(createAdventurer(advName, helipad));
         }
+        //need to create GUI initialization functions, put user icons into helipad,
+        //then need to build GUI side of actions
+        currentPlayer = roster.get(0);
 
         //build the game board
         for(int x = 0; x < 4; x++) {
@@ -57,8 +63,8 @@ public class GameEngine {
         capturedTreasures.add(newTreasure);
     }
     public boolean alreadyCaptured(Treasure newTreasure) {
-        for (Treasure t : capturedTreasures) {
-            if(t.name() == newTreasure.name()) return true;
+        for (Treasure treas : capturedTreasures) {
+            if(treas.name() == newTreasure.name()) return true;
         }
         return false;
     }
@@ -74,6 +80,32 @@ public class GameEngine {
             default: throw new RuntimeException("attempted to create an unsupported adventurer type");
         }
     }
+
+    private void floodRandom(int waterLevel) {
+        int randX, randY;
+        Random rand = new Random();
+        Tile floodingTile;
+        for(int i = 0; i < waterLevel; i++) {
+            randX = rand.nextInt(4);
+            randY = rand.nextInt(4);
+            floodingTile = gameBoard[randX][randY];
+            floodingTile.flood();
+            if(floodingTile.getSubmersion() == 1) GUI.floodTile(randX, randY);
+            else if(floodingTile.getSubmersion() == 2) GUI.sinkTile(randX, randY);
+        }
+    }
+
+    public void endTurn() {
+        floodRandom(waterLevel);
+        if(roster.indexOf(currentPlayer) == roster.size() - 1) {
+            currentPlayer = roster.get(0);
+        }
+        else {
+            currentPlayer = roster.get(roster.indexOf(currentPlayer) + 1);
+        }
+        GUI.nextTurn(currentPlayer, 4);
+    }
+
 }
 
 class Tile {
@@ -109,5 +141,9 @@ class Tile {
             return true;
         }
         else return false;
+    }
+
+    public void flood() {
+        submersion++;
     }
 }
