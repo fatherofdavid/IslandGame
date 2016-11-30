@@ -7,10 +7,14 @@ public abstract class Adventurer {
     protected String myName;
     protected Tile myTile;
     protected ArrayList<ActionCard> myActionCards;
-    protected ArrayList<TreasureCard> myTreasureCards;
+    protected ArrayList<Treasure> myTreasureCards;
+    protected GameEngine myGameEngine;
 
-    public Adventurer(Tile startingTile) {
+    public Adventurer(Tile startingTile, GameEngine gameEngine) {
         myTile = startingTile;
+        myGameEngine = gameEngine;
+        myActionCards = new ArrayList<>();
+        myTreasureCards = new ArrayList<>();
     }
 
     //this should not be used - IDE is forcing its creation
@@ -22,7 +26,9 @@ public abstract class Adventurer {
     public void setTile(Tile newTile) {myTile = newTile;};
 
     boolean isAccessible(Tile newTile){
-        if((newTile.getX() - myTile.getX() == 0) && (Math.abs(newTile.getY() - myTile.getY())) == 1)
+        if(newTile.getSubmersion() > 1) return false;
+        else if(newTile == myTile) return true;
+        else if((newTile.getX() - myTile.getX() == 0) && (Math.abs(newTile.getY() - myTile.getY())) == 1)
             return true;
         else if((newTile.getY() - myTile.getY() == 0) && (Math.abs(newTile.getX() - myTile.getX())) == 1)
             return true;
@@ -58,37 +64,57 @@ public abstract class Adventurer {
         else return false;
     }
 
-    public boolean captureTreasure(GameEngine game, Treasure treasure) {
-        if(myTile.getTreasureAccess() == treasure && remainingActions >= 1) {
-            if(!game.alreadyCaptured(treasure)) {
-                game.treasureCaptured(treasure);
+    public Treasure captureTreasure() {
+        if(myTile.getTreasureAccess() != null && remainingActions >= 1) {
+            int treasureCardCount = 0;
+            for(Treasure t : myTreasureCards) {
+                if(t.name() == myTile.getTreasureAccess().name()) treasureCardCount++;
+            }
+            if(!myGameEngine.alreadyCaptured(myTile.getTreasureAccess())) {
                 actionUsed(1);
-                return true;
+                return myTile.getTreasureAccess();
             }
         }
-        return false;
+        return null;
+    }
+
+    public boolean Helicopter(Tile newTile) {
+        if(newTile.getSubmersion() < 2) {
+            myTile = newTile;
+            return true;
+        }
+        else return false;
+    }
+
+    public boolean sandBag(Tile floodedTile) {
+        if(floodedTile.getSubmersion() == 1) {
+            floodedTile.shoreUp();
+            return true;
+        }
+        else return false;
     }
 
     public void actionUsed(float usedActionCount) {
         remainingActions = remainingActions - usedActionCount;
+        myGameEngine.GUI.setActionsRemaining(remainingActions);
     }
 
     public void addCard(Card card) {
         if(card instanceof ActionCard) myActionCards.add((ActionCard)card);
-        else if(card instanceof TreasureCard) myTreasureCards.add((TreasureCard)card);
+        else if(card instanceof Treasure) myTreasureCards.add((Treasure)card);
         else throw new RuntimeException("Problem with cards and type-casting");
     }
 
     public void removeCard(Card card) {
         if(card instanceof ActionCard) myActionCards.remove((ActionCard)card);
-        else if(card instanceof TreasureCard) myTreasureCards.remove((TreasureCard)card);
+        else if(card instanceof Treasure) myTreasureCards.remove((Treasure)card);
         else throw new RuntimeException("Problem with cards and type-casting");
     }
 }
 
 class Explorer extends Adventurer {
-    public Explorer(Tile myStartingTile) {
-        super(myStartingTile);
+    public Explorer(Tile myStartingTile, GameEngine myGameEngine) {
+        super(myStartingTile, myGameEngine);
         myName = "Explorer";
     }
 
@@ -96,8 +122,8 @@ class Explorer extends Adventurer {
     boolean isAccessible(Tile newTile) {
         if(newTile.getSubmersion() > 1)
             return false;
-        if(myTile == newTile)
-            return false;
+        else if(myTile == newTile)
+            return true;
         else if((Math.abs(newTile.getX() - myTile.getX()) <= 1) &&
                 (Math.abs(newTile.getY() - myTile.getY())) <= 1)
             return true;
@@ -109,8 +135,8 @@ class Explorer extends Adventurer {
 class Pilot extends Adventurer {
     boolean flightUsed = false;
 
-    public Pilot(Tile myStartingTile) {
-        super(myStartingTile);
+    public Pilot(Tile myStartingTile, GameEngine myGameEngine) {
+        super(myStartingTile, myGameEngine);
         myName = "Pilot";
     }
 
@@ -123,11 +149,15 @@ class Pilot extends Adventurer {
         }
         else return false;
     }
+
+    public void resetFly() {
+        flightUsed = false;
+    }
 }
 
 class Engineer extends Adventurer {
-    public Engineer(Tile myStartingTile) {
-        super(myStartingTile);
+    public Engineer(Tile myStartingTile, GameEngine myGameEngine) {
+        super(myStartingTile, myGameEngine);
         myName = "Engineer";
     }
 
@@ -144,8 +174,8 @@ class Engineer extends Adventurer {
 }
 
 class Messenger extends Adventurer {
-    public Messenger(Tile myStartingTile) {
-        super(myStartingTile);
+    public Messenger(Tile myStartingTile, GameEngine myGameEngine) {
+        super(myStartingTile, myGameEngine);
         myName = "Messenger";
     }
 
@@ -161,9 +191,9 @@ class Messenger extends Adventurer {
 }
 
 class Navigator extends Adventurer {
-    public Navigator(Tile myStartingTile) {
-        super(myStartingTile);
-        myName = "Messenger";
+    public Navigator(Tile myStartingTile, GameEngine myGameEngine) {
+        super(myStartingTile, myGameEngine);
+        myName = "Navigator";
     }
 
     public boolean guide(Adventurer adv, Tile newTile) {
@@ -177,15 +207,15 @@ class Navigator extends Adventurer {
 }
 
 class Diver extends Adventurer {
-    public Diver(Tile myStartingTile) {
-        super(myStartingTile);
+    public Diver(Tile myStartingTile, GameEngine myGameEngine) {
+        super(myStartingTile, myGameEngine);
         myName = "Diver";
     }
 
     //!! this doesn't fully work. It doesn't have any way to tell when you're done, or to stop you
     //from stopping on a sunk tile
     public boolean swim(Tile newTile) {
-        if(remainingActions >= 1) {
+        if(isAccessible(newTile) && remainingActions >= 1) {
             myTile = newTile;
             if(newTile.getSubmersion() < 1) {
                 actionUsed(1);

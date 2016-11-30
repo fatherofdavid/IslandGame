@@ -2,28 +2,41 @@ package com.annapolisWorks;
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 
 public class GUI_Controller implements Initializable {
     //set to 1 for move, 2 for shore, 3 for give card, 5 for fly, 6 for swim, 7 for guide
     private int actionSelected = 0;
     private GameEngine model;
+    private ArrayList<Label> playerLabels;
+    private ArrayList<Button> primaryActionButtons;
+    private ImageView selectedPlayer;
+    private boolean playerHasBeenSelected;
+    private Label usedCardLabel;
 
     @FXML
     private Label waterLevelLabel;
+
+    @FXML
+    private GridPane capturedTreasuresGridPane;
+
 
     @FXML
     private Label currentPlayerLabel;
@@ -116,42 +129,205 @@ public class GUI_Controller implements Initializable {
     private Button guideButton;
 
     @FXML
-    private Button useCardButton;
+    private Label tellUserLabel;
+
+    @FXML
+    private VBox actionCardsVBox;
+
+    @FXML
+    private TilePane treasureCardsTilePane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        currentPlayerLabel = player1Label;
+        playerLabels = new ArrayList<Label>();
+        playerLabels.add(player1Label);
+        playerLabels.add(player2Label);
+        playerLabels.add(player3Label);
+        playerLabels.add(player4Label);
+
+        primaryActionButtons = new ArrayList<Button>();
+        primaryActionButtons.add(moveButton);
+        primaryActionButtons.add(shoreUpButton);
+        primaryActionButtons.add(giveTreasureCardButton);
+        primaryActionButtons.add(captureTreasureButton);
+        primaryActionButtons.add(flyButton);
+        primaryActionButtons.add(swimButton);
+        primaryActionButtons.add(guideButton);
+
+        playerHasBeenSelected = false;
     }
 
     public void setModel(GameEngine newGame) {
         model = newGame;
     }
 
-    public void actionUsed(float used) {
-        float remainingActions = Float.parseFloat(remainingActionsLabel.getText());
-        remainingActions = remainingActions - used;
-        remainingActionsLabel.setText(""+remainingActions);
+    public void loadPlayers(ArrayList<Adventurer> roster) {
+        Adventurer adv;
+        for (int i = 0; i < roster.size(); i++) {
+            adv = roster.get(i);
+            addNewPlayer(adv.getName(), adv.myTile.getX(), adv.myTile.getY());
+            playerLabels.get(i).setText(adv.getName());
+        }
+        currentPlayerLabel = player1Label;
+        currentPlayerLabel.setText(">" + currentPlayerLabel.getText());
+        hideIrrelevantActions(roster.get(0));
+        showActionCards(roster.get(0));
+    }
+
+    public void addNewPlayer(String name, int tileX, int tileY) {
+        ImageView character = null;
+        switch(name) {
+            case "Explorer" : {
+                character = new ImageView("/explorer.png");
+                character.setId("Explorer");
+                break;
+            }
+            case "Pilot" : {
+                character = new ImageView("/pilot.png");
+                character.setId("Pilot");
+                break;
+            }
+            case "Engineer" : {
+                character = new ImageView("/engineer.png");
+                character.setId("Engineer");
+                break;
+            }
+            case "Messenger" : {
+                character = new ImageView("/messenger.png");
+                character.setId("Messenger");
+                break;
+            }
+            case "Navigator" : {
+                character = new ImageView("/navigator.png");
+                character.setId("Navigator");
+                break;
+            }
+            case "Diver" : {
+                character = new ImageView("/diver.png");
+                character.setId("Diver");
+                break;
+            }
+
+        }
+        VBox newVBox = getXY_VBox(tileX, tileY);
+        newVBox.getChildren().add(character);
+        character.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                selectedPlayer = (ImageView) event.getTarget();
+            }
+        });
+    }
+
+    public void setActionsRemaining(float remainingActions) {
+        remainingActionsLabel.setText("" + remainingActions);
+        if(remainingActions == 0) disablePrimaryActions();
+    }
+
+    public void disablePrimaryActions() {
+        for(Button btn : primaryActionButtons) {
+            btn.setDisable(true);
+        }
+    }
+    public void enablePrimaryActions() {
+        for(Button btn : primaryActionButtons) {
+            btn.setDisable(false);
+        }
     }
 
     public void flyUsed() { flyButton.setDisable(true); }
     public void resetFly() { flyButton.setDisable(false); }
+
+    private void showActionCards(Adventurer currentPlayer) {
+        actionCardsVBox.getChildren().removeAll();
+        for(ActionCard actionCard : currentPlayer.myActionCards) {
+            Label newAction = new Label(actionCard.name());
+            newAction.setVisible(true);
+            if("HELICOPTER".equals(actionCard.name())) {
+                newAction.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        actionSelected = 8;
+                        usedCardLabel = (Label) event.getSource();
+                        //to win, a helicopter must be used
+                        model.checkForVictory();
+                    }
+                });
+            }
+            else if("SANDBAG".equals(actionCard.name())) {
+                newAction.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        actionSelected = 9;
+                        usedCardLabel = (Label) event.getSource();
+                    }
+                });
+            }
+            else throw new RuntimeException("There is an abnormal action card in the player's hand.");
+            actionCardsVBox.getChildren().add(newAction);
+        }
+    }
+
+    public void actionCardWasUsed() {
+        if(usedCardLabel != null) {
+            usedCardLabel.setVisible(false);
+            usedCardLabel.setManaged(false);
+        }
+        else throw new RuntimeException("Tried to delete a nonexistent action card.");
+    }
+
+    private void showTreasureCards(Adventurer currentPlayer) {
+        treasureCardsTilePane.getChildren().removeAll();
+        for(Treasure treasure : currentPlayer.myTreasureCards) {
+            ImageView newTreasureCard = null;
+            switch(treasure.name()) {
+                case "FIRE" : {
+                    newTreasureCard = new ImageView("/fire.png");
+                    break;
+                }
+                case "WATER" : {
+                    newTreasureCard = new ImageView("/water.png");
+                    break;
+                }
+                case "AIR" : {
+                    newTreasureCard = new ImageView("/wind.png");
+                    break;
+                }
+                case "EARTH" : {
+                    newTreasureCard = new ImageView("/earth.png");
+                    break;
+                }
+            }
+            if(newTreasureCard != null) treasureCardsTilePane.getChildren().add(newTreasureCard);
+            else throw new RuntimeException("attempted to add null treasure card");
+        }
+    }
 
 
     public void nextTurn(Adventurer activePlayer, int remainingActions) {
         remainingActionsLabel.setText(""+remainingActions);
         resetFly();
 
+        //update '>' to point at current player
         String id = activePlayer.getName();
         currentPlayerLabel.setText(currentPlayerLabel.getText().substring(1));
-        if(id.equals(player1Label.getText())) player1Label.setText(">" + player1Label.getText());
-        else if(id.equals(player2Label.getText())) player1Label.setText(">" + player1Label.getText());
-        else if(id.equals(player3Label.getText())) player1Label.setText(">" + player1Label.getText());
-        else if(id.equals(player4Label.getText())) player1Label.setText(">" + player1Label.getText());
-        else throw new RuntimeException("attempting to switch turn to non-existent player");
+        for (Label label : playerLabels) {
+            if(id.equals(label.getText())) {
+                label.setText(">" + label.getText());
+                currentPlayerLabel = label;
+            }
+        }
 
+        enablePrimaryActions();
+        hideIrrelevantActions(activePlayer);
+        showActionCards(activePlayer);
+        showTreasureCards(activePlayer);
+    }
+
+    private void hideIrrelevantActions(Adventurer activePlayer) {
         //toggle active appropriate Action buttons
-        Method[] methodlist = activePlayer.getClass().getDeclaredMethods();
-        if(checkHasMethod("fly", methodlist)) {
+        Method[] methodList = activePlayer.getClass().getDeclaredMethods();
+        if(checkHasMethod("fly", methodList)) {
             flyButton.setVisible(true);
             flyButton.setManaged(true);
         }
@@ -159,7 +335,7 @@ public class GUI_Controller implements Initializable {
             flyButton.setVisible(false);
             flyButton.setManaged(false);
         }
-        if(checkHasMethod("guide", methodlist)) {
+        if(checkHasMethod("guide", methodList)) {
             guideButton.setVisible(true);
             guideButton.setManaged(true);
         }
@@ -167,7 +343,7 @@ public class GUI_Controller implements Initializable {
             guideButton.setVisible(false);
             guideButton.setManaged(false);
         }
-        if(checkHasMethod("swim", methodlist)) {
+        if(checkHasMethod("swim", methodList)) {
             swimButton.setVisible(true);
             swimButton.setManaged(true);
         }
@@ -175,8 +351,6 @@ public class GUI_Controller implements Initializable {
             swimButton.setVisible(false);
             swimButton.setManaged(false);
         }
-
-        //Show Cards in the player's hand
     }
 
     private boolean checkHasMethod(String desiredMethod, Method[] methodlist) {
@@ -186,10 +360,32 @@ public class GUI_Controller implements Initializable {
         return false;
     }
 
-    public void raiseWater() {
-        int currentWaterLevel = Integer.parseInt(waterLevelLabel.getText());
-        currentWaterLevel++;
-        waterLevelLabel.setText("" + currentWaterLevel);
+    public void setWaterLevel(int waterLevel) {
+        waterLevelLabel.setText("" + waterLevel);
+    }
+
+    public void setTileAccess(String element, int tileX, int tileY) {
+        ImageView access = null;
+        switch(element) {
+            case "FIRE": {
+                access = new ImageView("/fire.png");
+                break;
+            }
+            case "WATER": {
+                access = new ImageView("/water.png");
+                break;
+            }
+            case "AIR": {
+                access = new ImageView("/wind.png");
+                break;
+            }
+            case "EARTH": {
+                access = new ImageView("/earth.png");
+                break;
+            }
+        }
+        VBox newVBox = getXY_VBox(tileX, tileY);
+        newVBox.getChildren().add(access);
     }
 
     public void floodTile(int x, int y) {
@@ -203,9 +399,8 @@ public class GUI_Controller implements Initializable {
     }
 
     public void shoreTile(int x, int y) {
-        ImageView tileToFlood = getXYImage(x, y);
-        ImageView myImage = null;
-        myImage.setOpacity(1d);
+        ImageView tileToShore = getXYImage(x, y);
+        tileToShore.setOpacity(1d);
     }
 
     public void movePlayerIcon(String characterId, int lastx, int lasty, int newx, int newy) {
@@ -221,6 +416,32 @@ public class GUI_Controller implements Initializable {
         lastVBox.getChildren().remove(myImage);
         VBox newVBox = getXY_VBox(newx, newy);
         newVBox.getChildren().add(myImage);
+    }
+
+    public void newTreasureCaptured(Treasure treasure) {
+        ImageView newTreasureImage;
+        switch(treasure) {
+            case FIRE : {
+                newTreasureImage = new ImageView("/fire.png");
+                capturedTreasuresGridPane.add(newTreasureImage, 0, 0);
+                break;
+            }
+            case WATER : {
+                newTreasureImage = new ImageView("/water.png");
+                capturedTreasuresGridPane.add(newTreasureImage, 1, 0);
+                break;
+            }
+            case AIR : {
+                newTreasureImage = new ImageView("/wind.png");
+                capturedTreasuresGridPane.add(newTreasureImage, 0, 1);
+                break;
+            }
+            case EARTH : {
+                newTreasureImage = new ImageView("/earth.png");
+                capturedTreasuresGridPane.add(newTreasureImage, 1, 1);
+                break;
+            }
+        }
     }
 
 
@@ -288,52 +509,108 @@ public class GUI_Controller implements Initializable {
         throw new RuntimeException("tried to access a non-existent tile");
     }
 
-
-    public void move(int x, int y) {
-        actionSelected = 0;
-        // this was just for fun but it worked, if you put a playerIcon in the tile
-        // movePlayerIcon("explorer", 2, 2, x, y);
+    public void tellUser(String str) {
+        tellUserLabel.setText(str);
     }
 
 
+    public void resetActionSwitch() {
+        actionSelected = 0;
+        playerHasBeenSelected = false;
+    }
+    public void resetSelectedPlayer() {
+        selectedPlayer = null;
+    }
+
     //user button commands
     public void tileClicked(Event event) {
-
         int x = GridPane.getColumnIndex((Node)(event.getSource()));
         int y = GridPane.getRowIndex((Node)(event.getSource()));
         switch(actionSelected) {
             case 0: break;
-            case 1: move(x, y);
-            //need to add all the other actions
+            case 1: {
+                model.requestMove(x, y);
+                resetActionSwitch();
+                break;
+            }
+            case 2: {
+                model.requestShoreUp(x, y);
+                resetActionSwitch();
+                break;
+            }
+            case 3: {
+                //add code to give cards
+                resetActionSwitch();
+                break;
+            }
+            case 4: {
+                model.requestCaptureTreasure();
+                resetActionSwitch();
+                break;
+            }
+            case 5: {
+                model.requestFly(x, y);
+                resetActionSwitch();
+                break;
+            }
+            case 6: {
+                model.requestSwim(x, y);
+                resetActionSwitch();
+                break;
+            }
+            case 7: {
+                //flag to ignore first tile click when guiding
+                System.out.println("" + playerHasBeenSelected);
+                if(playerHasBeenSelected) {
+                    model.requestGuide(selectedPlayer.getId(), x, y);
+                    playerHasBeenSelected = false;
+                    resetActionSwitch();
+                }
+                else playerHasBeenSelected = true;
+                break;
+            }
+            case 8: {
+                model.requestHelicopter(x, y);
+                resetActionSwitch();
+                break;
+            }
+            case 9: {
+                model.requestSandbag(x, y);
+                resetActionSwitch();
+                break;
+            }
+
         }
     }
 
     public void moveClicked(ActionEvent event){
         actionSelected = 1;
     }
-    public void shoreUp(ActionEvent event){
+    public void shoreUpClicked(ActionEvent event){
         actionSelected = 2;
     }
-    public void giveCard(ActionEvent event){
+    public void giveCardClicked(ActionEvent event){ actionSelected = 3; }
+    public void captureTreasureClicked(ActionEvent event){
+        model.requestCaptureTreasure();
     }
-    public void captureTreasure(ActionEvent event){
+    public void flyClicked(ActionEvent event){
+        actionSelected = 5;
     }
-    public void fly(ActionEvent event){
-        flyUsed();
+    public void swimClicked(ActionEvent event){
+        actionSelected = 6;
     }
-    public void swim(ActionEvent event){
+    public void guideClicked(ActionEvent event){
+        actionSelected = 7;
     }
-    public void guide(ActionEvent event){
+    public void useCardClicked(ActionEvent event){
+        //delete this button
     }
-    public void useCard(ActionEvent event){
-    }
-    public void endTurn(ActionEvent event){
+    public void endTurnClicked(ActionEvent event){
         model.endTurn();
     }
 }
 
 /*
 Useful code snippet for next time:
-        ImageView character = new ImageView("/explorer.png");
-        character.setId("explorer");
+
  */

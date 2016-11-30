@@ -108,7 +108,6 @@ public class Intro_Controller implements Initializable{
             e.printStackTrace();
         }
 
-
         //start the game, load GUI into model and vice versa
         GUI_Controller GUI = (GUI_Controller)fxmlLoader.getController();
         GameEngine newGame = new GameEngine(GUI, waterLevel, roster);
