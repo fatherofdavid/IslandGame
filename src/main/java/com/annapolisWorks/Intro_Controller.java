@@ -15,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
@@ -47,6 +48,8 @@ public class Intro_Controller implements Initializable{
     @FXML
     private RadioButton difficultyLegendaryRadio;
 
+    @FXML
+    private Label alertUserLabel;
 
     @FXML
     private AnchorPane rootAnchorPane;
@@ -86,10 +89,20 @@ public class Intro_Controller implements Initializable{
 
         //pull in player list
         ArrayList<String> roster = new ArrayList();
+        String newPlayer = "";
         for (ChoiceBox cb : choiceBoxes) {
             if(cb.getValue() != adventurers.get(0)) {
-                roster.add((String)cb.getValue());
+                newPlayer = (String)cb.getValue();
+                if(roster.contains(newPlayer)) {
+                    alertUserLabel.setText("Can't choose 2 identical team members");
+                    return;
+                }
+                else roster.add(newPlayer);
             }
+        }
+        if(roster.size() < 2) {
+            alertUserLabel.setText("Please choose at least 2 players");
+            return;
         }
         //get water level
         int waterLevel;

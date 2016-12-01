@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -18,52 +17,37 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.annapolisWorks.GUI_Controller">
+<AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.annapolisWorks.GUI_Controller">
    <children>
-      <MenuBar layoutX="78.0" layoutY="-288.0" minHeight="25.0" AnchorPane.leftAnchor="78.0" AnchorPane.rightAnchor="-78.0" AnchorPane.topAnchor="-288.0">
+      <MenuBar layoutY="2.0" minHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="New Game" />
-                  <MenuItem mnemonicParsing="false" text="Quit Game" />
-                  <MenuItem mnemonicParsing="false" text="Exit" />
+              <MenuItem mnemonicParsing="false" onAction="#fileNewGame" text="New Game" />
+                  <MenuItem mnemonicParsing="false" onAction="#fileExit" text="Exit" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+                  <MenuItem mnemonicParsing="false" onAction="#helpInstructions" text="Instructions" />
+              <MenuItem mnemonicParsing="false" onAction="#helpAbout" text="About" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
       <HBox layoutX="259.0" layoutY="157.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
          <children>
-            <VBox prefHeight="476.0" prefWidth="169.0">
+            <Pane>
                <children>
-                  <SplitPane dividerPositions="0.6855345911949685" prefHeight="51.0" prefWidth="161.0">
-                    <items>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-                    </items>
-                  </SplitPane>
-                  <Pane prefHeight="200.0" prefWidth="200.0">
+                  <Pane prefHeight="142.0" prefWidth="140.0">
                      <children>
                         <Label layoutX="7.0" layoutY="2.0" prefHeight="25.0" prefWidth="118.0" text="Water Level: " />
-                        <Label layoutX="5.0" layoutY="27.0" text="Captured Treasures:" />
-                        <GridPane fx:id="capturedTreasuresGridPane" layoutX="5.0" layoutY="56.0" prefHeight="80.0" prefWidth="80.0">
-                          <columnConstraints>
-                            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
-                            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                        </GridPane>
                         <Label fx:id="waterLevelLabel" layoutX="86.0" layoutY="6.0" text="2" />
+                        <Label layoutX="5.0" layoutY="27.0" text="Captured Treasures:" />
+                        <TilePane fx:id="capturedTreasuresTilePane" layoutX="-2.0" layoutY="44.0" prefHeight="82.0" prefWidth="140.0" />
                      </children>
                   </Pane>
-                  <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="100.0">
+                  <VBox layoutX="11.0" layoutY="127.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="126.0" prefWidth="118.0">
                      <children>
                         <Label text="Turn Order:" />
                         <Label fx:id="player1Label" />
@@ -72,8 +56,14 @@
                         <Label fx:id="player4Label" />
                      </children>
                   </VBox>
+                  <VBox layoutX="5.0" layoutY="269.0" prefHeight="200.0" prefWidth="127.0">
+                     <children>
+                        <Label fx:id="tellUserLabel" alignment="TOP_LEFT" minHeight="-Infinity" prefHeight="34.0" prefWidth="120.0" textFill="RED" wrapText="true" />
+                        <TilePane fx:id="notifyUserTilePane" prefHeight="200.0" prefWidth="200.0" />
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
+            </Pane>
             <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" HBox.hgrow="NEVER">
                <children>
                   <ImageView fitHeight="475.0" fitWidth="650.0" pickOnBounds="true" preserveRatio="true">
@@ -81,7 +71,7 @@
                         <Image url="@ocean.png" />
                      </image>
                   </ImageView>
-                  <GridPane fx:id="gameBoardGridPane" gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0">
+                  <GridPane gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0">
                     <columnConstraints>
                       <ColumnConstraints maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
@@ -258,7 +248,7 @@
             </Pane>
             <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="120.0">
                <children>
-                  <VBox prefHeight="241.0" prefWidth="132.0">
+                  <VBox prefHeight="267.0" prefWidth="120.0">
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
@@ -273,12 +263,12 @@
                         <Button fx:id="flyButton" mnemonicParsing="false" onAction="#flyClicked" prefWidth="120.0" text="Fly" />
                         <Button fx:id="swimButton" mnemonicParsing="false" onAction="#swimClicked" prefWidth="120.0" text="Swim" />
                         <Button fx:id="guideButton" mnemonicParsing="false" onAction="#guideClicked" prefHeight="21.0" prefWidth="120.0" text="Guide" />
-                        <Button mnemonicParsing="false" onAction="#endTurnClicked" prefWidth="120.0" text="End Turn" />
-                        <Label fx:id="tellUserLabel" alignment="TOP_LEFT" minHeight="-Infinity" prefHeight="34.0" prefWidth="120.0" text="helpful notes..." wrapText="true" />
+                        <Button fx:id="endTurnButton" mnemonicParsing="false" onAction="#endTurnClicked" prefHeight="42.0" prefWidth="120.0" text="End Turn" />
+                        <Button fx:id="nextButton" mnemonicParsing="false" onAction="#nextClicked" prefHeight="42.0" prefWidth="120.0" text="Next" />
                      </children>
                   </VBox>
                   <Label text="Action Cards: " />
-                  <VBox fx:id="actionCardsVBox" prefHeight="200.0" prefWidth="100.0" />
+                  <TilePane fx:id="actionCardsTilePane" prefHeight="50.0" prefWidth="120.0" />
                   <Pane prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <Label prefHeight="25.0" prefWidth="118.0" text="Treasure Cards:" />

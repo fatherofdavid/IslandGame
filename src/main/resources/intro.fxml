@@ -34,5 +34,6 @@
             <Label layoutX="21.0" layoutY="6.0" text="Select Team: " textFill="WHITE" />
          </children>
       </Pane>
+      <Label fx:id="alertUserLabel" layoutX="100.0" layoutY="312.0" prefHeight="17.0" prefWidth="220.0" textFill="WHITE" />
    </children>
 </AnchorPane>

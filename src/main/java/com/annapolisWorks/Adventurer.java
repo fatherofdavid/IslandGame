@@ -27,13 +27,19 @@ public abstract class Adventurer {
 
     boolean isAccessible(Tile newTile){
         if(newTile.getSubmersion() > 1) return false;
-        else if(newTile == myTile) return true;
+        else if(isAdjacent(newTile)) return true;
+        else return false;
+    }
+
+    boolean isAdjacent(Tile newTile) {
+        if(newTile == myTile) {
+            return true;
+        }
         else if((newTile.getX() - myTile.getX() == 0) && (Math.abs(newTile.getY() - myTile.getY())) == 1)
             return true;
         else if((newTile.getY() - myTile.getY() == 0) && (Math.abs(newTile.getX() - myTile.getX())) == 1)
             return true;
-        else
-            return false;
+        else return false;
     }
 
     public boolean move(Tile newTile) {
@@ -59,19 +65,28 @@ public abstract class Adventurer {
         if(teammate.myTile == myTile && remainingActions >= 1) {
             teammate.addCard(card);
             this.removeCard(card);
+            actionUsed(1f);
             return true;
         }
         else return false;
     }
 
     public Treasure captureTreasure() {
-        if(myTile.getTreasureAccess() != null && remainingActions >= 1) {
+        if(myTile.getTreasureAccess() != null && remainingActions >= 1 && myTile.getSubmersion() == 0) {
             int treasureCardCount = 0;
             for(Treasure t : myTreasureCards) {
                 if(t.name() == myTile.getTreasureAccess().name()) treasureCardCount++;
             }
-            if(!myGameEngine.alreadyCaptured(myTile.getTreasureAccess())) {
+            if(!myGameEngine.alreadyCaptured(myTile.getTreasureAccess()) & treasureCardCount >= 4) {
                 actionUsed(1);
+                int costOfTreasure = 4;
+                for(int i = 0, deleted = 0; i < myTreasureCards.size() && deleted < (costOfTreasure + 1); i++ ) {
+                    if(myTreasureCards.get(i).name() == myTile.getTreasureAccess().name()) {
+                        myTreasureCards.remove(i);
+                        i = 0;
+                        deleted++;
+                    }
+                }
                 return myTile.getTreasureAccess();
             }
         }
@@ -102,7 +117,7 @@ public abstract class Adventurer {
     public void addCard(Card card) {
         if(card instanceof ActionCard) myActionCards.add((ActionCard)card);
         else if(card instanceof Treasure) myTreasureCards.add((Treasure)card);
-        else throw new RuntimeException("Problem with cards and type-casting");
+        //else do nothing - in case water_rises card is drawn
     }
 
     public void removeCard(Card card) {
@@ -119,16 +134,12 @@ class Explorer extends Adventurer {
     }
 
     @Override
-    boolean isAccessible(Tile newTile) {
-        if(newTile.getSubmersion() > 1)
-            return false;
-        else if(myTile == newTile)
-            return true;
+    boolean isAdjacent(Tile newTile) {
+        if(myTile == newTile) return true;
         else if((Math.abs(newTile.getX() - myTile.getX()) <= 1) &&
                 (Math.abs(newTile.getY() - myTile.getY())) <= 1)
             return true;
-        else
-            return false;
+        else return false;
     }
 }
 
@@ -184,6 +195,7 @@ class Messenger extends Adventurer {
         if(remainingActions >= 1) {
             teammate.addCard(card);
             this.removeCard(card);
+            actionUsed(1f);
             return true;
         }
         else return false;
@@ -212,12 +224,12 @@ class Diver extends Adventurer {
         myName = "Diver";
     }
 
-    //!! this doesn't fully work. It doesn't have any way to tell when you're done, or to stop you
+    //This doesn't fully work. It doesn't have any way to tell when you're done, or to stop you
     //from stopping on a sunk tile
     public boolean swim(Tile newTile) {
-        if(isAccessible(newTile) && remainingActions >= 1) {
+        if(isAdjacent(newTile) && remainingActions >= 1) {
             myTile = newTile;
-            if(newTile.getSubmersion() < 1) {
+            if(newTile.getSubmersion() == 0) {
                 actionUsed(1);
                 return true;
             }
