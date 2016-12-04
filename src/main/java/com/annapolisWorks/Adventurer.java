@@ -73,21 +73,22 @@ public abstract class Adventurer {
 
     public Treasure captureTreasure() {
         if(myTile.getTreasureAccess() != null && remainingActions >= 1 && myTile.getSubmersion() == 0) {
-            int treasureCardCount = 0;
+            ArrayList<Treasure> usedTreasureCards = new ArrayList<>();
+            int costOfTreasure = 4;
             for(Treasure t : myTreasureCards) {
-                if(t.name() == myTile.getTreasureAccess().name()) treasureCardCount++;
-            }
-            if(!myGameEngine.alreadyCaptured(myTile.getTreasureAccess()) & treasureCardCount >= 4) {
-                actionUsed(1);
-                int costOfTreasure = 4;
-                for(int i = 0, deleted = 0; i < myTreasureCards.size() && deleted < (costOfTreasure + 1); i++ ) {
-                    if(myTreasureCards.get(i).name() == myTile.getTreasureAccess().name()) {
-                        myTreasureCards.remove(i);
-                        i = 0;
-                        deleted++;
-                    }
+                if(t.name() == myTile.getTreasureAccess().name()) {
+                    usedTreasureCards.add(t);
+                    if(usedTreasureCards.size() >= costOfTreasure) break;
                 }
-                return myTile.getTreasureAccess();
+            }
+            if(!myGameEngine.alreadyCaptured(myTile.getTreasureAccess())) {
+                if(usedTreasureCards.size() >= costOfTreasure) {
+                    actionUsed(1);
+                    for(Treasure t : usedTreasureCards) {
+                        myTreasureCards.remove(t);
+                    }
+                    return myTile.getTreasureAccess();
+                }
             }
         }
         return null;

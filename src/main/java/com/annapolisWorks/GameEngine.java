@@ -14,7 +14,6 @@ public class GameEngine {
     private int waterLevel;
     GUI_Controller GUI;
     private Tile[][] gameBoard = new Tile[4][4];
-    private Tile helipad;
 
 
     public GameEngine(GUI_Controller newGUI, int startingWaterLevel, ArrayList<String> rosterStrings){
@@ -322,7 +321,7 @@ public class GameEngine {
         if(capturedTreasures.size() == 4) {
             boolean allArePresent = true;
             for(Adventurer adv : roster) {
-                if(adv.myTile != helipad) allArePresent = false;
+                if(adv.myTile.getTreasureAccess().name() != "HELI") allArePresent = false;
             }
             if(allArePresent) {
                 System.out.println("you have won");
