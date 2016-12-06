@@ -3,23 +3,31 @@ package com.annapolisWorks;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static com.annapolisWorks.WaterRisesCard.WATER_RISES;
-
 public class GameEngine {
     private ArrayList<Adventurer> roster;
     private Adventurer currentPlayer;
     private Adventurer savedPlayer;
     private ArrayList<Adventurer> strandedPlayers;
     private ArrayList<Treasure> capturedTreasures;
+    private ArrayList<Card> drawPile;
+    public ArrayList<Card> discardPile;
     private int waterLevel;
     GUI_Controller GUI;
+
+
     private Tile[][] gameBoard = new Tile[4][4];
+
+    public Tile[][] getGameBoard() {
+        return gameBoard;
+    }
 
 
     public GameEngine(GUI_Controller newGUI, int startingWaterLevel, ArrayList<String> rosterStrings){
         waterLevel = startingWaterLevel;
         GUI = newGUI;
         capturedTreasures = new ArrayList<>();
+        drawPile = loadCardDeck();
+        discardPile = new ArrayList<>();
         GUI.setWaterLevel(waterLevel);
 
         //build the game board
@@ -39,7 +47,6 @@ public class GameEngine {
         }
         currentPlayer = roster.get(0);
         currentPlayer.remainingActions = 4f;
-        GUI.loadPlayers(roster);
 
         //can randomize this for more complex gameplay
         //remember these will return false if an overwrite is attempted
@@ -60,6 +67,8 @@ public class GameEngine {
         GUI.setTileAccess(Treasure.EARTH, 0, 1);
         gameBoard[0][2].setTreasureAccess(Treasure.EARTH);
         GUI.setTileAccess(Treasure.EARTH, 0, 2);
+
+        GUI.loadPlayers(roster);
     }
 
     public boolean alreadyCaptured(Treasure newTreasure) {
@@ -125,6 +134,7 @@ public class GameEngine {
         ArrayList<Adventurer> newlyStrandedPlayers;
         newlyStrandedPlayers = floodRandom(waterLevel);
         drawCards(2);
+        resetPilotFlyAbility();
         if(newlyStrandedPlayers == null) nextPlayer();
         else {
             savedPlayer = currentPlayer;
@@ -142,15 +152,9 @@ public class GameEngine {
         }
         currentPlayer.remainingActions = 4;
         GUI.nextTurn(currentPlayer, 4);
-        if(currentPlayer instanceof Pilot) {
-            ((Pilot) currentPlayer).resetFly();
-            GUI.resetFly();
-        }
     }
 
     public void strandedPlayersMove() {
-        //need to build a check here for losing the Game if a player can't get anywhere
-
         //once all stranded players have moved, resume gameplay
         if(strandedPlayers.size() == 0) {
             currentPlayer = savedPlayer;
@@ -158,12 +162,22 @@ public class GameEngine {
         }
         else {
             currentPlayer = strandedPlayers.get(0);
+            if(currentPlayer.drowned()) gameOverLost();
             currentPlayer.remainingActions = 1;
             GUI.setActionsRemaining(1);
             GUI.tellUser(currentPlayer.getName() + "'s tile has sunk. Choose action.");
             GUI.strandedTurn(currentPlayer);
         }
+        resetPilotFlyAbility();
     }
+
+    void resetPilotFlyAbility() {
+        if(currentPlayer instanceof Pilot) {
+            ((Pilot) currentPlayer).resetFly();
+            GUI.resetFly();
+        }
+    }
+
 
     void requestMove(int x, int y) {
         int lastx, lasty;
@@ -247,17 +261,19 @@ public class GameEngine {
         GUI.resetSelectedPlayer();
     }
 
-    void requestSwim(int x, int y) {
+    void requestSwim(ArrayList<int[]> swimRoute) {
         int lastx = currentPlayer.myTile.getX();
         int lasty = currentPlayer.myTile.getY();
-        if(((Diver) currentPlayer).swim(gameBoard[x][y])) {
+        String swimAttemptResult = ((Diver) currentPlayer).swim(swimRoute);
+        if(swimAttemptResult == "") {
             //this function needs to be finished
             GUI.movePlayerIcon(currentPlayer.getName(), lastx, lasty, currentPlayer.myTile.getX(),
                     currentPlayer.myTile.getY());
             if(strandedPlayers != null) strandedPlayers.remove(currentPlayer);
+            GUI.tellUser("Swimming...");
         }
         else {
-            GUI.tellUser("Can't swim there.");
+            GUI.tellUser(swimAttemptResult);
         }
     }
 
@@ -265,7 +281,7 @@ public class GameEngine {
         int lastx = currentPlayer.myTile.getX();
         int lasty = currentPlayer.myTile.getY();
         if(currentPlayer.Helicopter(gameBoard[x][y])) {
-            discardCard(currentPlayer, ActionCard.HELICOPTER);
+            currentPlayer.discardCard(ActionCard.HELICOPTER);
             GUI.movePlayerIcon(currentPlayer.getName(), lastx, lasty, currentPlayer.myTile.getX(),
                     currentPlayer.myTile.getY());
             GUI.actionCardWasUsed();
@@ -275,7 +291,7 @@ public class GameEngine {
 
     void requestSandbag(int x, int y) {
         if(currentPlayer.sandBag(gameBoard[x][y])) {
-            discardCard(currentPlayer, ActionCard.SANDBAG);
+            currentPlayer.discardCard(ActionCard.SANDBAG);
             GUI.shoreTile(x, y);
             GUI.actionCardWasUsed();
         }
@@ -290,30 +306,36 @@ public class GameEngine {
         Card newCard = null;
         ArrayList<Card> newCardList = new ArrayList<>();
         for(int i = 0; i < n; i++) {
-            k = rand.nextInt(29);
-            if (k <= 3) {
-                waterRise();
-                newCard = WATER_RISES;
-            }
-            else if (k > 3 && k <= 6) newCard = ActionCard.HELICOPTER;
-            else if (k > 6 && k <= 9) newCard = ActionCard.SANDBAG;
-            else if (k > 9 && k <= 14) newCard = Treasure.FIRE;
-            else if (k > 14 && k <= 19) newCard = Treasure.WATER;
-            else if (k > 19 && k <= 24) newCard = Treasure.AIR;
-            else newCard = Treasure.EARTH;
+            if(drawPile.size() < 1) shuffleCards();
+            k = rand.nextInt(drawPile.size());
+            newCard = drawPile.get(k);
             currentPlayer.addCard(newCard);
             newCardList.add(newCard);
+            drawPile.remove(newCard);
+        }
+        if(newCard instanceof WaterRisesCard) {
+            discardPile.add(newCard);
+            waterRise();
         }
         GUI.showDrawnCard(newCardList);
     }
 
-    private void discardCard(Adventurer adv, ActionCard card) {
-        for(ActionCard usedCard : adv.myActionCards) {
-            if(usedCard.name() == card.name()) {
-                currentPlayer.myActionCards.remove(usedCard);
-                break;
-            }
+    private void shuffleCards() {
+        drawPile.addAll(discardPile);
+        discardPile.clear();
+    }
+
+    private ArrayList<Card> loadCardDeck() {
+        ArrayList<Card> newDeck = new ArrayList<>();
+        for(int i = 0; i < 5; i++) {
+            newDeck.add(Treasure.FIRE); newDeck.add(Treasure.AIR);
+            newDeck.add(Treasure.WATER); newDeck.add(Treasure.EARTH);
         }
+        for(int i = 0; i < 3; i++) {
+            newDeck.add(ActionCard.HELICOPTER); newDeck.add(ActionCard.SANDBAG);
+            newDeck.add(WaterRisesCard.WATER_RISES);
+        }
+        return newDeck;
     }
 
     public void checkForVictory() {
@@ -328,6 +350,11 @@ public class GameEngine {
                 System.exit(0);
             }
         }
+    }
+
+    private void gameOverLost() {
+        System.out.println("you lost");
+        System.exit(0);
     }
 
 }

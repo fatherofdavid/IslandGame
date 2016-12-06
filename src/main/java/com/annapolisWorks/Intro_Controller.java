@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -84,9 +85,6 @@ public class Intro_Controller implements Initializable{
 
     @FXML
     void startUp(ActionEvent event) {
-
-        //still need validation for user entries
-
         //pull in player list
         ArrayList<String> roster = new ArrayList();
         String newPlayer = "";
@@ -110,13 +108,13 @@ public class Intro_Controller implements Initializable{
         else if(difficultyNoviceRadio.isSelected()) waterLevel = 3;
         else waterLevel = 4;
 
-
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("/myStage.fxml"));
-        Parent root = null;
+        Group root = new Group();
+        Parent parent = null;
         try {
-            root = fxmlLoader.load(getClass().getResource("/myStage.fxml"));
-            root = (Parent) fxmlLoader.load();
+            parent = fxmlLoader.load(getClass().getResource("/myStage.fxml"));
+            parent = (Parent) fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,13 +123,25 @@ public class Intro_Controller implements Initializable{
         GUI_Controller GUI = (GUI_Controller)fxmlLoader.getController();
         GameEngine newGame = new GameEngine(GUI, waterLevel, roster);
         ((GUI_Controller)fxmlLoader.getController()).setModel(newGame);
+        root.getChildren().add(parent);
 
         //show new window, hide current one
         Stage stage = new Stage();
         stage.setTitle("Forbidden Island");
         stage.setScene(new Scene(root, 900, 500));
         stage.show();
+
         rootAnchorPane.getScene().getWindow().hide();
     }
 
 }
+
+/*
+////////EXPERIMENTAL CODE SNIPPET CREATING INTRO ANIMATION
+        Canvas canvas = new Canvas( 900, 512 ); //dev
+        root.getChildren().add( canvas ); //dev
+        //animation here
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.drawImage(new Image("/helicopter.png"),200,200);
+        root.getChildren().remove( canvas );
+ */

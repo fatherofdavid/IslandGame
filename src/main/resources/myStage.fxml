@@ -19,7 +19,7 @@
 
 <AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.annapolisWorks.GUI_Controller">
    <children>
-      <MenuBar layoutY="2.0" minHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="2.0">
+      <MenuBar layoutX="-110.0" layoutY="2.0" minHeight="25.0" AnchorPane.leftAnchor="-110.0" AnchorPane.rightAnchor="110.0" AnchorPane.topAnchor="2.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -37,29 +37,38 @@
       </MenuBar>
       <HBox layoutX="259.0" layoutY="157.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
          <children>
-            <Pane>
+            <Pane prefHeight="476.0" prefWidth="235.0">
                <children>
-                  <Pane prefHeight="142.0" prefWidth="140.0">
+                  <VBox prefHeight="382.0" prefWidth="120.0">
                      <children>
-                        <Label layoutX="7.0" layoutY="2.0" prefHeight="25.0" prefWidth="118.0" text="Water Level: " />
-                        <Label fx:id="waterLevelLabel" layoutX="86.0" layoutY="6.0" text="2" />
-                        <Label layoutX="5.0" layoutY="27.0" text="Captured Treasures:" />
-                        <TilePane fx:id="capturedTreasuresTilePane" layoutX="-2.0" layoutY="44.0" prefHeight="82.0" prefWidth="140.0" />
-                     </children>
-                  </Pane>
-                  <VBox layoutX="11.0" layoutY="127.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="126.0" prefWidth="118.0">
-                     <children>
-                        <Label text="Turn Order:" />
-                        <Label fx:id="player1Label" />
-                        <Label fx:id="player2Label" />
-                        <Label fx:id="player3Label" />
-                        <Label fx:id="player4Label" />
+                        <Pane prefHeight="173.0" prefWidth="100.0">
+                           <children>
+                              <Label layoutX="7.0" layoutY="2.0" prefHeight="25.0" prefWidth="93.0" text="Water Level: " />
+                              <Label fx:id="waterLevelLabel" layoutX="86.0" layoutY="6.0" text="2" />
+                              <ImageView fx:id="waterLevelImageView" fitHeight="137.0" fitWidth="112.0" layoutX="6.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@water%20level.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
+                        <Label text="Captured Treasures:" />
+                        <TilePane fx:id="capturedTreasuresTilePane" prefHeight="82.0" prefWidth="93.0" />
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="82.0" prefWidth="118.0">
+                           <children>
+                              <Label text="Turn Order:" />
+                              <Label fx:id="player1Label" />
+                              <Label fx:id="player2Label" />
+                              <Label fx:id="player3Label" />
+                              <Label fx:id="player4Label" />
+                           </children>
+                        </VBox>
                      </children>
                   </VBox>
-                  <VBox layoutX="5.0" layoutY="269.0" prefHeight="200.0" prefWidth="127.0">
+                  <VBox layoutX="5.0" layoutY="379.0" prefHeight="90.0" prefWidth="127.0">
                      <children>
                         <Label fx:id="tellUserLabel" alignment="TOP_LEFT" minHeight="-Infinity" prefHeight="34.0" prefWidth="120.0" textFill="RED" wrapText="true" />
-                        <TilePane fx:id="notifyUserTilePane" prefHeight="200.0" prefWidth="200.0" />
+                        <TilePane fx:id="notifyUserTilePane" prefHeight="55.0" prefWidth="127.0" />
                      </children>
                   </VBox>
                </children>
@@ -248,6 +257,12 @@
             </Pane>
             <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="120.0">
                <children>
+                  <Pane prefHeight="92.0" prefWidth="120.0">
+                     <children>
+                        <Label layoutX="2.0" layoutY="6.0" prefHeight="34.0" prefWidth="49.0" text="Current Player:" textAlignment="RIGHT" wrapText="true" />
+                        <ImageView fx:id="currentPlayerImageView" fitHeight="42.0" fitWidth="40.0" layoutX="65.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </Pane>
                   <VBox prefHeight="267.0" prefWidth="120.0">
                      <children>
                         <HBox prefHeight="100.0" prefWidth="200.0">

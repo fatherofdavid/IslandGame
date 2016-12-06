@@ -85,7 +85,7 @@ public abstract class Adventurer {
                 if(usedTreasureCards.size() >= costOfTreasure) {
                     actionUsed(1);
                     for(Treasure t : usedTreasureCards) {
-                        myTreasureCards.remove(t);
+                        discardCard(t);
                     }
                     return myTile.getTreasureAccess();
                 }
@@ -125,6 +125,29 @@ public abstract class Adventurer {
         if(card instanceof ActionCard) myActionCards.remove((ActionCard)card);
         else if(card instanceof Treasure) myTreasureCards.remove((Treasure)card);
         else throw new RuntimeException("Problem with cards and type-casting");
+    }
+
+    public void discardCard(Card card) {
+        removeCard(card);
+        myGameEngine.discardPile.add(card);
+    }
+
+    public boolean drowned() {
+        //pilot and diver don't drown unless all other tiles are sunk
+        if(this instanceof Diver || this instanceof Pilot) {
+            for(Tile[] tileColumns : myGameEngine.getGameBoard()) {
+                for(Tile t : tileColumns) {
+                    if(t.getSubmersion() < 2) return false;
+                }
+            }
+        }
+        //other adventurers drown if they can't get to any other tile.
+        for(Tile[] tileColumns : myGameEngine.getGameBoard()) {
+            for(Tile t : tileColumns) {
+                if(isAccessible(t)) return false;
+            }
+        }
+        return true;
     }
 }
 
@@ -227,16 +250,44 @@ class Diver extends Adventurer {
 
     //This doesn't fully work. It doesn't have any way to tell when you're done, or to stop you
     //from stopping on a sunk tile
-    public boolean swim(Tile newTile) {
-        if(isAdjacent(newTile) && remainingActions >= 1) {
-            myTile = newTile;
-            if(newTile.getSubmersion() == 0) {
-                actionUsed(1);
-                return true;
-            }
-            return true;
+    public String swim(ArrayList<int[]> swimRoute) {
+        Tile[][] board = myGameEngine.getGameBoard();
+        int lastTileX = myTile.getX();
+        int lastTileY = myTile.getY();
+        int newTileX, newTileY;
+
+        //check that final tile is not sunk
+        int[] finalXY = swimRoute.get(swimRoute.size() - 1);
+        int finalX = finalXY[0];
+        int finalY = finalXY[1];
+        if(board[finalX][finalY].getSubmersion() > 1) return "Can't stop on a submerged tile";
+
+        //check that each tile is adjacent to previous and either submerged or sunk
+        //don't check final tile's submersion
+        int[] nextXYCoordinate = new int[2];
+        for(int k = 0; k < swimRoute.size() - 1; k++) {
+            nextXYCoordinate = swimRoute.get(k);
+            newTileX = nextXYCoordinate[0];
+            newTileY = nextXYCoordinate[1];
+
+            //all tiles except the last one should be flooded or sunk
+            if(board[newTileX][newTileY].getSubmersion() == 0 && !(newTileX == finalX && newTileY == finalY))
+                return "Can't swim across dry land";
+
+            //check that tile is adjacent to previous tile in path
+            if((newTileX - lastTileX == 0) && (Math.abs(newTileY - lastTileY)) == 1);
+                //they are adjacent - keep iterating
+            else if((newTileY - lastTileY == 0) && (Math.abs(newTileX - lastTileX)) == 1);
+                //they are adjacent - keep iterating
+            else return "You chose 2 non-adjacent tiles";
+
+            lastTileX = newTileX;
+            lastTileY = newTileY;
         }
-        else return false;
+        //success - return empty String indicating success
+        myTile = board[finalX][finalY];
+        actionUsed(1);
+        return "";
     }
 
 }

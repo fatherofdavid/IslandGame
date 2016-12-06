@@ -19,6 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -34,9 +35,12 @@ public class GUI_Controller implements Initializable {
     private GameEngine model;
     private ArrayList<Label> playerLabels;
     private ArrayList<Button> allActionButtons;
+    private ArrayList<Button> allRegularButtons;
     private ArrayList<Button> strandedActionButtons;
     private ImageView selectedPlayer;
     private boolean selectingPlayer;
+    private boolean choosingSwimRoute;
+    private ArrayList<int[]> swimRoute;
     private ImageView usedCardImageView;
 
     @FXML
@@ -44,6 +48,9 @@ public class GUI_Controller implements Initializable {
 
     @FXML
     private Label waterLevelLabel;
+
+    @FXML
+    private ImageView waterLevelImageView;
 
     @FXML
     private TilePane capturedTreasuresTilePane;
@@ -115,6 +122,9 @@ public class GUI_Controller implements Initializable {
     private AnchorPane tile3x3;
 
     @FXML
+    private ImageView currentPlayerImageView;
+
+    @FXML
     Label remainingActionsLabel;
 
     @FXML
@@ -169,7 +179,10 @@ public class GUI_Controller implements Initializable {
         allActionButtons.add(flyButton);
         allActionButtons.add(swimButton);
         allActionButtons.add(guideButton);
-        allActionButtons.add(endTurnButton);
+
+        allRegularButtons = new ArrayList<Button>();
+        allRegularButtons.addAll(allActionButtons);
+        allRegularButtons.add(endTurnButton);
 
         strandedActionButtons = new ArrayList<Button>();
         strandedActionButtons.add(moveButton);
@@ -178,8 +191,17 @@ public class GUI_Controller implements Initializable {
 
         selectingPlayer = true;
         selectedPlayer = new ImageView();
+        choosingSwimRoute = false;
+        swimRoute = new ArrayList<int[]>();
         nextButton.setVisible(false);
         nextButton.setManaged(false);
+
+        //need to work on this more later
+        //ImageView waterImage = new ImageView("/water tick.png");
+        //waterLevelImageView.setImage(new WritableImage((PixelReader)waterImage), )
+        //((WritableImage)waterLevelImageView.getImage()).getPixelWriter().setPixels(20,90,70,5,(PixelReader)waterImage,0,0);
+        waterLevelImageView.setVisible(false);
+
     }
 
     public void setModel(GameEngine newGame) {
@@ -195,6 +217,7 @@ public class GUI_Controller implements Initializable {
         }
         currentPlayerLabel = player1Label;
         currentPlayerLabel.setText(">" + currentPlayerLabel.getText());
+        setCurrentPlayer(roster.get(0));
         hideIrrelevantActions(roster.get(0));
         showActionCards(roster.get(0));
     }
@@ -261,10 +284,9 @@ public class GUI_Controller implements Initializable {
         for(Button btn : allActionButtons) {
             btn.setDisable(true);
         }
-        endTurnButton.setDisable(false);
     }
     public void enableAllActions() {
-        for(Button btn : allActionButtons) {
+        for(Button btn : allRegularButtons) {
             btn.setDisable(false);
         }
     }
@@ -349,14 +371,7 @@ public class GUI_Controller implements Initializable {
     public void nextTurn(Adventurer activePlayer, int remainingActions) {
         remainingActionsLabel.setText(""+remainingActions);
         //update '>' to point at current player
-        String id = activePlayer.getName();
-        currentPlayerLabel.setText(currentPlayerLabel.getText().substring(1));
-        for (Label label : playerLabels) {
-            if(id.equals(label.getText())) {
-                label.setText(">" + label.getText());
-                currentPlayerLabel = label;
-            }
-        }
+        setCurrentPlayer(activePlayer);
         enableAllActions();
         hideIrrelevantActions(activePlayer);
         showActionCards(activePlayer);
@@ -366,9 +381,10 @@ public class GUI_Controller implements Initializable {
     }
 
     public void strandedTurn(Adventurer strandedPlayer) {
+        setCurrentPlayer(strandedPlayer);
         enableAllActions();
         hideIrrelevantActions(strandedPlayer);
-        for(Button btn : allActionButtons) {
+        for(Button btn : allRegularButtons) {
             if(!strandedActionButtons.contains(btn)) btn.setDisable(true);
             else btn.setDisable(false);
         }
@@ -376,6 +392,19 @@ public class GUI_Controller implements Initializable {
         nextButton.setManaged(true);
         actionCardsTilePane.getChildren().clear();
         treasureCardsTilePane.getChildren().clear();
+    }
+
+    private void setCurrentPlayer(Adventurer nextPlayer) {
+        String id = nextPlayer.getName();
+        currentPlayerLabel.setText(currentPlayerLabel.getText().substring(1));
+        for (Label label : playerLabels) {
+            if(id.equals(label.getText())) {
+                label.setText(">" + label.getText());
+                currentPlayerLabel = label;
+            }
+        }
+        Image myIcon = getPlayerIcon(nextPlayer.myName, nextPlayer.myTile.getX(), nextPlayer.myTile.getY());
+        currentPlayerImageView.setImage(myIcon);
     }
 
     private void hideIrrelevantActions(Adventurer activePlayer) {
@@ -429,16 +458,30 @@ public class GUI_Controller implements Initializable {
     public void floodTile(int x, int y) {
         ImageView tileToFlood = getXYImage(x, y);
         tileToFlood.setOpacity(0.6);
+        //flood access image too. Any players in the VBox will have an ID
+        VBox floodedVBox = getXY_VBox(x, y);
+        for (Node n : floodedVBox.getChildren()) {
+            if(n.getId() == null) n.setOpacity(0.6);
+        }
     }
 
     public void sinkTile(int x, int y) {
         ImageView tileToFlood = getXYImage(x, y);
-        tileToFlood.setOpacity(0d);
+        tileToFlood.setOpacity(0.1);
+        //sink access image too. Any players in the VBox will have an ID
+        VBox floodedVBox = getXY_VBox(x, y);
+        for (Node n : floodedVBox.getChildren()) {
+            if(n.getId() == null) n.setOpacity(0.1);
+        }
     }
 
     public void shoreTile(int x, int y) {
         ImageView tileToShore = getXYImage(x, y);
         tileToShore.setOpacity(1d);
+        VBox floodedVBox = getXY_VBox(x, y);
+        for (Node n : floodedVBox.getChildren()) {
+            if(n.getId() == null) n.setOpacity(1d);
+        }
     }
 
     public void movePlayerIcon(String characterId, int lastx, int lasty, int newx, int newy) {
@@ -454,6 +497,20 @@ public class GUI_Controller implements Initializable {
         lastVBox.getChildren().remove(myImage);
         VBox newVBox = getXY_VBox(newx, newy);
         newVBox.getChildren().add(myImage);
+    }
+
+    private Image getPlayerIcon(String characterId, int x, int y) {
+        VBox lastVBox = getXY_VBox(x, y);
+        ImageView myImage = null;
+        for(Node n : lastVBox.getChildren()) {
+            if(n instanceof ImageView) {
+                if(n.getId() == characterId) {
+                    myImage = (ImageView)n;
+                    break;
+                }
+            }
+        }
+        return myImage.getImage();
     }
 
     public void newTreasureCaptured(Treasure treasure) {
@@ -571,6 +628,7 @@ public class GUI_Controller implements Initializable {
         selectingPlayer = true;
         resetSelectedPlayer();
     }
+
     public void resetSelectedPlayer() {
         notifyUserTilePane.getChildren().clear();
         selectedPlayer.setImage(null);
@@ -608,9 +666,10 @@ public class GUI_Controller implements Initializable {
                 break;
             }
             case 6: {
-                model.requestSwim(x, y);
-                resetActionSwitch();
-                break;
+                int[] nextTile = new int[2];
+                nextTile[0] = x;
+                nextTile[1] = y;
+                swimRoute.add(nextTile);
             }
             case 7: {
                 //flag to ignore first tile click, because it is choosing a player not a tile
@@ -654,7 +713,19 @@ public class GUI_Controller implements Initializable {
     }
     public void swimClicked(ActionEvent event){
         actionSelected = 6;
-        tellUser("Click the tile you want to swim to. As long as you stay in water, you can keep swimming without using an action");
+        tellUser("Click a path through the tiles you want to swim through");
+        if(!choosingSwimRoute) {
+            choosingSwimRoute = true;
+            swimButton.setText("Attempt Swim");
+        }
+        else {
+            choosingSwimRoute = false;
+            swimButton.setText("Start Swim");
+            model.requestSwim(swimRoute);
+            swimRoute.clear();
+            resetActionSwitch();
+        }
+
     }
     public void guideClicked(ActionEvent event){
         actionSelected = 7;
