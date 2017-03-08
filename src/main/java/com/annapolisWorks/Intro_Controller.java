@@ -23,7 +23,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class Intro_Controller implements Initializable{
-
+    //verify GIT working correctly after project furlough
 
     @FXML
     private ChoiceBox<String> player1ChoiceBox;
