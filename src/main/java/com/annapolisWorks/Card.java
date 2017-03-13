@@ -5,7 +5,7 @@ public interface Card {
 
 }
 
-enum Treasure implements Card{ FIRE, WATER, AIR, EARTH, HELI;
+enum Treasure implements Card{ FIRE, WATER, AIR, EARTH, HELICOPTER;
 }
 
 enum ActionCard implements Card{ HELICOPTER, SANDBAG

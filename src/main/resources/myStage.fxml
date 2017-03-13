@@ -17,17 +17,22 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="501.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.annapolisWorks.GUI_Controller">
+<AnchorPane fx:id="rootAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1030.0" stylesheets="@mt-island-styles.css" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.annapolisWorks.GUI_Controller">
    <children>
-      <MenuBar layoutX="-110.0" layoutY="2.0" minHeight="25.0" AnchorPane.leftAnchor="-110.0" AnchorPane.rightAnchor="110.0" AnchorPane.topAnchor="2.0">
+      <ImageView fitHeight="650.0" fitWidth="1030.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="map.png" />
+         </image>
+      </ImageView>
+      <MenuBar layoutX="-110.0" layoutY="2.0" minHeight="25.0" prefHeight="25.0" prefWidth="1109.0" styleClass="menuBar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="2.0">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu mnemonicParsing="false" styleClass="menu" text="File">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#fileNewGame" text="New Game" />
                   <MenuItem mnemonicParsing="false" onAction="#fileExit" text="Exit" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" styleClass="menu" text="Help">
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#helpInstructions" text="Instructions" />
               <MenuItem mnemonicParsing="false" onAction="#helpAbout" text="About" />
@@ -35,9 +40,10 @@
           </Menu>
         </menus>
       </MenuBar>
-      <HBox layoutX="259.0" layoutY="157.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+      <HBox layoutX="-302.0" layoutY="51.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="51.0">
          <children>
-            <Pane prefHeight="476.0" prefWidth="235.0">
+            <Pane prefHeight="200.0" prefWidth="60.0" />
+            <Pane prefHeight="476.0" prefWidth="137.0">
                <children>
                   <VBox prefHeight="382.0" prefWidth="120.0">
                      <children>
@@ -75,7 +81,7 @@
             </Pane>
             <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" HBox.hgrow="NEVER">
                <children>
-                  <ImageView fitHeight="475.0" fitWidth="650.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="480.0" fitWidth="642.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@ocean.png" />
                      </image>
@@ -98,154 +104,160 @@
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <image>
-                                    <Image url="@black%20gate.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile1x0" onMouseClicked="#tileClicked" prefHeight="120.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@brown%20temple.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile2x0" minHeight="-Infinity" onMouseClicked="#tileClicked" prefHeight="120.0" prefWidth="160.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
                            <children>
                               <ImageView fitHeight="135.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@coast.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile3x0" onMouseClicked="#tileClicked" prefHeight="120.0" prefWidth="160.0" GridPane.columnIndex="3" GridPane.rowIndex="0">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@gold%20gate.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile0x1" onMouseClicked="#tileClicked" prefHeight="120.0" prefWidth="160.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@bridge.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile1x1" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@copper%20gate.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile2x1" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@blue%20temple.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile3x1" onMouseClicked="#tileClicked" prefHeight="119.0" prefWidth="174.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@oasis.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile0x2" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@iron%20gate.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile1x2" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@cliffs.png" />
+                                    <Image url="@sandy%20beach.png" />
                                  </image>
                               </ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile2x2" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@helipad.png" />
-                                 </image></ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                                    <Image url="@sandy%20beach.png" />
+                                 </image>
+                              </ImageView>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile3x2" onMouseClicked="#tileClicked" prefHeight="120.0" prefWidth="160.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@yellow%20temple.png" />
-                                 </image></ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                                    <Image url="@sandy%20beach.png" />
+                                 </image>
+                              </ImageView>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile0x3" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="3">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@springs.png" />
-                                 </image></ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                                    <Image url="@sandy%20beach.png" />
+                                 </image>
+                              </ImageView>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile1x3" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@silver%20gate.png" />
-                                 </image></ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                                    <Image url="@sandy%20beach.png" />
+                                 </image>
+                              </ImageView>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile2x3" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@red%20temple.png" />
-                                 </image></ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                                    <Image url="@sandy%20beach.png" />
+                                 </image>
+                              </ImageView>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="tile3x3" onMouseClicked="#tileClicked" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
                            <children>
                               <ImageView fitHeight="120.0" fitWidth="160.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@red%20gate.png" />
-                                 </image></ImageView>
-                              <VBox prefHeight="120.0" prefWidth="40.0" AnchorPane.rightAnchor="0.0" />
+                                    <Image url="@sandy%20beach.png" />
+                                 </image>
+                              </ImageView>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </children>
@@ -255,7 +267,7 @@
                   <Insets />
                </HBox.margin>
             </Pane>
-            <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="120.0">
+            <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="585.0" prefWidth="130.0">
                <children>
                   <Pane prefHeight="92.0" prefWidth="120.0">
                      <children>
@@ -263,9 +275,9 @@
                         <ImageView fx:id="currentPlayerImageView" fitHeight="42.0" fitWidth="40.0" layoutX="65.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" />
                      </children>
                   </Pane>
-                  <VBox prefHeight="267.0" prefWidth="120.0">
+                  <VBox>
                      <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
+                        <HBox prefHeight="21.0" prefWidth="111.0">
                            <children>
                               <Label prefHeight="17.0" prefWidth="80.0" text="Actions Left: " />
                               <Label fx:id="remainingActionsLabel" text="4" />
@@ -291,6 +303,9 @@
                      </children>
                   </Pane>
                </children>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
             </VBox>
          </children>
       </HBox>

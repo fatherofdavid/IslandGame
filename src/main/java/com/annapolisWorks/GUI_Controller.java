@@ -26,7 +26,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class GUI_Controller implements Initializable {
@@ -258,8 +257,8 @@ public class GUI_Controller implements Initializable {
 
         }
         if(character == null) throw new RuntimeException("Tried to create nonexistent adventurer");
-        VBox newVBox = getXY_VBox(tileX, tileY);
-        newVBox.getChildren().add(character);
+        HBox newHBox = getXY_HBox(tileX, tileY);
+        newHBox.getChildren().add(character);
         character.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -451,58 +450,57 @@ public class GUI_Controller implements Initializable {
 
     public void setTileAccess(Treasure element, int tileX, int tileY) {
         ImageView newTreasureAcessImage = generateCardImage(element);
-        VBox newVBox = getXY_VBox(tileX, tileY);
-        newVBox.getChildren().add(newTreasureAcessImage);
+        //HBox newHBox = getXY_HBox(tileX, tileY); //345
+        AnchorPane newAnchorPane = getXYPane(tileX, tileY);
+        newAnchorPane.getChildren().add(newTreasureAcessImage);
     }
 
     public void floodTile(int x, int y) {
         ImageView tileToFlood = getXYImage(x, y);
-        tileToFlood.setOpacity(0.6);
-        //flood access image too. Any players in the VBox will have an ID
-        VBox floodedVBox = getXY_VBox(x, y);
-        for (Node n : floodedVBox.getChildren()) {
-            if(n.getId() == null) n.setOpacity(0.6);
+        tileToFlood.setOpacity(0.4);
+        AnchorPane floodedAnchorPane = getXYPane(x, y);
+        for (Node n : floodedAnchorPane.getChildren()) {
+            n.setOpacity(0.4);
         }
     }
 
     public void sinkTile(int x, int y) {
         ImageView tileToFlood = getXYImage(x, y);
         tileToFlood.setOpacity(0.1);
-        //sink access image too. Any players in the VBox will have an ID
-        VBox floodedVBox = getXY_VBox(x, y);
-        for (Node n : floodedVBox.getChildren()) {
-            if(n.getId() == null) n.setOpacity(0.1);
+        AnchorPane floodedAnchorPane = getXYPane(x, y);
+        for (Node n : floodedAnchorPane.getChildren()) {
+            n.setOpacity(0.1);
         }
     }
 
     public void shoreTile(int x, int y) {
         ImageView tileToShore = getXYImage(x, y);
         tileToShore.setOpacity(1d);
-        VBox floodedVBox = getXY_VBox(x, y);
-        for (Node n : floodedVBox.getChildren()) {
-            if(n.getId() == null) n.setOpacity(1d);
+        AnchorPane floodedAnchorPane = getXYPane(x, y);
+        for (Node n : floodedAnchorPane.getChildren()) {
+            n.setOpacity(1d);
         }
     }
 
     public void movePlayerIcon(String characterId, int lastx, int lasty, int newx, int newy) {
-        VBox lastVBox = getXY_VBox(lastx, lasty);
+        HBox lastHBox = getXY_HBox(lastx, lasty);
         ImageView myImage = null;
-        for(Node n : lastVBox.getChildren()) {
+        for(Node n : lastHBox.getChildren()) {
             if(n instanceof ImageView) {
                 if(n.getId() == characterId) {
                     myImage = (ImageView)n;
                 }
             }
         }
-        lastVBox.getChildren().remove(myImage);
-        VBox newVBox = getXY_VBox(newx, newy);
-        newVBox.getChildren().add(myImage);
+        lastHBox.getChildren().remove(myImage);
+        HBox newHBox = getXY_HBox(newx, newy);
+        newHBox.getChildren().add(myImage);
     }
 
     private Image getPlayerIcon(String characterId, int x, int y) {
-        VBox lastVBox = getXY_VBox(x, y);
+        HBox lastHBox = getXY_HBox(x, y);
         ImageView myImage = null;
-        for(Node n : lastVBox.getChildren()) {
+        for(Node n : lastHBox.getChildren()) {
             if(n instanceof ImageView) {
                 if(n.getId() == characterId) {
                     myImage = (ImageView)n;
@@ -565,12 +563,12 @@ public class GUI_Controller implements Initializable {
         throw new RuntimeException("the program tried to access a nonexistent node");
     }
 
-    public VBox getXY_VBox(int x, int y) {
+    public HBox getXY_HBox(int x, int y) {
         AnchorPane anchorPane = getXYPane(x, y);
         ObservableList<Node> anchorContents = anchorPane.getChildren();
         for (Node node : anchorContents) {
-            if(node instanceof VBox)
-                return (VBox)node;
+            if(node instanceof HBox)
+                return (HBox)node;
         }
         throw new RuntimeException("the program tried to access a nonexistent node");
     }

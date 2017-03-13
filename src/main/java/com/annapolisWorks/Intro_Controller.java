@@ -23,7 +23,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class Intro_Controller implements Initializable{
-    //verify GIT working correctly after project furlough
 
     @FXML
     private ChoiceBox<String> player1ChoiceBox;
@@ -128,7 +127,7 @@ public class Intro_Controller implements Initializable{
         //show new window, hide current one
         Stage stage = new Stage();
         stage.setTitle("Forbidden Island");
-        stage.setScene(new Scene(root, 900, 500));
+        stage.setScene(new Scene(root, 1030, 595));
         stage.show();
 
         rootAnchorPane.getScene().getWindow().hide();

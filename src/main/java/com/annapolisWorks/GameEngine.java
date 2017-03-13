@@ -41,7 +41,8 @@ public class GameEngine {
         roster = new ArrayList<>();
         //for now all adventurers start on the helipad, which is always at 2, 2. Can upgrade later.
         Tile helipad = gameBoard[2][2];
-        helipad.setTreasureAccess(Treasure.HELI);
+        helipad.setTreasureAccess(Treasure.HELICOPTER);
+        GUI.setTileAccess(Treasure.HELICOPTER, 2, 2);
         for (String advName : rosterStrings) {
             roster.add(createAdventurer(advName, helipad));
         }
